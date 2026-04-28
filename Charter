@@ -62,3 +62,29 @@ if os.path.exists(file_path):
     print(df[['loanstatus', 'loan_amnt', 'int_rate', 'grade']])
 else:
     print("Please download the raw data from the provided Google Drive link into the data/ folder.")
+
+
+
+
+##7. Scope limits
+We will not estimate structural causal drivers of default (e.g., how macroeconomic shocks impact default rates).
+We are modeling Probability of Default (PD) only; we will not estimate Loss Given Default (LGD) or Exposure at Default (EAD).
+We will drop variables that reflect post-default outcomes (e.g., collections, recoveries) as they introduce target leakage.
+We will not deploy the model as a live, consumer-facing API or web application.
+
+
+##8. Risks and fallback
+Risk: The automated Weight of Evidence (WoE) binning algorithm fails to find logical, monotonic relationships for highly predictive but non-linear continuous variables, causing a massive drop in scorecard performance.
+Fallback: We will manually enforce equal-frequency decile binning for problematic variables and group them using business domain logic, or fall back to spline-transformed logistic regression to capture non-linearities while retaining additive interpretability.
+
+
+##9. Reproducibility checklist
+ uv run main.py runs end-to-end in under 10 minutes on a clean machine with no manual intervention.
+ It writes outputs/primary_metric.json containing a single JSON object with at least {"metric_name": "ROC-AUC", "value": <number>, "threshold": 0.70, "passed": <bool>}.
+ It writes outputs/baseline_metric.json in the same shape.
+ A README.md documents the commands and expected outputs in ≤ 20 lines.
+ All data sources are either fetched in-script or committed under data/ with a licence note (or clear script instructions on fetching large files).
+Sign-off
+By submitting this charter, the team agrees that this is the plan the project will be graded against. The instructor will not penalize you just because the topic turns out to be difficult, as long as the project stays honest and within the approved scope.
+
+Signed: Suryashis
