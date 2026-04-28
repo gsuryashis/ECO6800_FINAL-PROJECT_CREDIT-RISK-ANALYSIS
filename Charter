@@ -1,1 +1,64 @@
+# Project Charter — ECO 6810 Final Project
 
+## Header
+
+| Field | Value |
+|---|---|
+| Team members | Suryashis, Vignesh, Vishvas |
+| Project type | predictive |
+| Estimated hours per person | 50 hours |
+| Charter version | v1 |
+| Date | 2026-04-28 |
+
+---
+
+## 1. Problem and stakeholder
+
+The Chief Risk Officer (CRO) and Credit Risk Committee of a mid-tier consumer lending bank need to estimate the probability that a retail borrower will default on a personal loan. Because consumer lending is strictly regulated (e.g., under the Equal Credit Opportunity Act and Fair Credit Reporting Act), the bank cannot use black-box machine learning models; they require a fully transparent, interpretable point-based scorecard. This project provides a transparent scorecard to inform loan approval decisions, while also quantifying if (and how much) predictive power is sacrificed by using an interpretable model instead of an unconstrained algorithmic approach.
+
+---
+
+## 2. Main outcome variable
+
+- **Name:** `defaultstatus` (Probability of Default)
+- **Unit:** Binary classification (1 = Default, 0 = Non-Default), mapped to a scaled scorecard point value (e.g., 300-850 range).
+- **Source table/column/field:** Derived from the raw `loanstatus` field (1 for `Charged Off` or `Default`, 0 for `Fully Paid` or `Current`).
+- **Population / panel:** Historical US consumer loan-level data comprising 887,379 observations across approved borrowers.
+
+---
+
+## 3. Main quantitative success threshold
+
+Out-of-sample ROC-AUC on a 20% held-out test set must be $\ge$ 0.70 for the scorecard model, and the selected features must maintain strict Weight of Evidence (WoE) monotonicity (ensuring the model remains logically interpretable and regulatory-compliant).
+
+---
+
+## 4. Baseline to beat
+
+The baseline is a standard, unbinned Logistic Regression using raw continuous variables and one-hot encoded categorical variables, without any Weight of Evidence (WoE) transformations or Information Value (IV) variable selection. This naive baseline is expected to yield an out-of-sample ROC-AUC of roughly 0.65 to 0.68 but suffers from outlier sensitivity and poor business interpretability.
+
+---
+
+## 5. Falsifiable hypothesis
+
+The Information Value (IV) selected, WoE-binned Logistic Regression scorecard will achieve an out-of-sample ROC-AUC within 0.02 points of an unconstrained, non-linear black-box model (e.g., LightGBM), demonstrating that strict scorecard interpretability does not lead to a statistically catastrophic loss of predictive accuracy for this asset class.
+
+---
+
+## 6. Data sources and access plan
+
+- **Name and URL/API endpoint:** Historical Loan Dataset (887k observations) hosted on Google Drive.
+- **Licence or permission to use:** Openly accessible/shared academic dataset.
+- **Access method:** Direct programmatic download using `gdown` or reading a locally downloaded CSV placed in the `data/` directory.
+- **Data fetch script:**
+```python
+import pandas as pd
+import os
+
+# Assuming data is placed in the data directory after being downloaded from Drive
+file_path = "data/raw_loan_data.csv"
+if os.path.exists(file_path):
+    df = pd.read_csv(file_path, nrows=1)
+    print(df[['loanstatus', 'loan_amnt', 'int_rate', 'grade']])
+else:
+    print("Please download the raw data from the provided Google Drive link into the data/ folder.")
