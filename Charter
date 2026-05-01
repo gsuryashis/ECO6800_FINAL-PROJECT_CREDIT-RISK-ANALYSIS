@@ -5,86 +5,94 @@
 | Field | Value |
 |---|---|
 | Team members | Suryashis, Vignesh, Vishvas |
-| Project type | predictive |
-| Estimated hours per person | 50 hours |
-| Charter version | v1 |
-| Date | 2026-04-28 |
+| Project type | Predictive & Methodological Research |
+| Estimated hours per person | 60 hours |
+| Charter version | v2 |
+| Date | 2026-05-01 |
 
 ---
 
 ## 1. Problem and stakeholder
 
-The Chief Risk Officer (CRO) and Credit Risk Committee of a mid-tier consumer lending bank need to estimate the probability that a retail borrower will default on a personal loan. Because consumer lending is strictly regulated (e.g., under the Equal Credit Opportunity Act and Fair Credit Reporting Act), the bank cannot use black-box machine learning models; they require a fully transparent, interpretable point-based scorecard. This project provides a transparent scorecard to inform loan approval decisions, while also quantifying if (and how much) predictive power is sacrificed by using an interpretable model instead of an unconstrained algorithmic approach.
+The Chief Risk Officer (CRO) of a consumer lending bank needs to estimate retail borrower default probability using fully transparent, regulatory-compliant models (ECOA/FCRA standards). While traditional Weight of Evidence (WoE) scorecards are interpretable, they often sacrifice the predictive power of modern algorithms. 
+
+**Novel Contribution:** This project goes beyond traditional modeling by developing *two* interpretable scorecards:
+1. A traditional WoE-binned Logistic Regression Scorecard.
+2. A cutting-edge Explainable AI (XAI) Scorecard derived from extracting SHAP (SHapley Additive exPlanations) values from a LightGBM model.
+This provides the CRO with a quantitative study on whether modern XAI techniques can safely replace legacy logistic frameworks in regulated credit underwriting.
 
 ---
 
-## 2. Main outcome variable
+## 2. Exact Prediction Target
 
 - **Name:** `defaultstatus` (Probability of Default)
-- **Unit:** Binary classification (1 = Default, 0 = Non-Default), mapped to a scaled scorecard point value (e.g., 300-850 range).
-- **Source table/column/field:** Derived from the raw `loanstatus` field (1 for `Charged Off` or `Default`, 0 for `Fully Paid` or `Current`).
-- **Population / panel:** Historical US consumer loan-level data comprising 887,379 observations across approved borrowers.
+- **Unit:** Binary classification aligned with Basel III 90+ DPD industry standards.
+  - **1 (Default/Bad):** Loans marked as `Charged Off`, `Default`, OR `Late (31-120 days)`.
+  - **0 (Non-Default/Good):** Loans marked as `Fully Paid`.
+- **Filtering:** We will strictly filter out `Current` or `In Grace Period` loans, as these are right-censored and introduce noise to ex-ante probability modeling.
+- **Population:** Historical US consumer loan-level data (~887k total observations before outcome filtering).
 
 ---
 
-## 3. Main quantitative success threshold
+## 3. Held-out metric for success
 
-Out-of-sample ROC-AUC on a 20% held-out test set must be $\ge$ 0.70 for the scorecard model, and the selected features must maintain strict Weight of Evidence (WoE) monotonicity (ensuring the model remains logically interpretable and regulatory-compliant).
+The model will be evaluated on a **20% stratified held-out test set**. Success requires meeting thresholds across both *discrimination* (rank-ordering) and *calibration* (accuracy of probabilities):
+1. **ROC-AUC (Discrimination):** Must achieve $\ge$ 0.70.
+2. **Kolmogorov-Smirnov (KS) Statistic:** Must achieve $\ge$ 30 (Industry standard for separation).
+3. **Brier Score (Calibration):** Must beat the baseline Brier Score, ensuring predicted default probabilities closely match actual default rates.
+4. **Interpretability Constraint:** Features in both the WoE and SHAP scorecards must enforce strict monotonicity to ensure logical regulatory compliance.
 
 ---
 
 ## 4. Baseline to beat
 
-The baseline is a standard, unbinned Logistic Regression using raw continuous variables and one-hot encoded categorical variables, without any Weight of Evidence (WoE) transformations or Information Value (IV) variable selection. This naive baseline is expected to yield an out-of-sample ROC-AUC of roughly 0.65 to 0.68 but suffers from outlier sensitivity and poor business interpretability.
+1. **Majority-Class Baseline:** Predicting the modal outcome (Fully Paid).
+2. **Simple Rules-Based Heuristic:** A naive policy rule simulating rudimentary underwriting (e.g., "Predict Default = 1 IF `grade` in ('E', 'F', 'G') OR `dti` > 30%").
+3. **Vanilla Logistic Regression:** An unbinned, continuous-variable logistic regression to establish why WoE binning is historically necessary.
 
 ---
 
 ## 5. Falsifiable hypothesis
 
-The Information Value (IV) selected, WoE-binned Logistic Regression scorecard will achieve an out-of-sample ROC-AUC within 0.02 points of an unconstrained, non-linear black-box model (e.g., LightGBM), demonstrating that strict scorecard interpretability does not lead to a statistically catastrophic loss of predictive accuracy for this asset class.
+**Hypothesis:** The SHAP-derived LightGBM scorecard will achieve a higher out-of-sample ROC-AUC and a lower Brier Score than the traditional WoE-Logistic scorecard, while maintaining equal regulatory transparency via perfectly monotonic feature effects. This will prove that banks can upgrade from 1990s scorecard architecture to XAI-backed tree models without violating model interpretability requirements.
 
 ---
 
-## 6. Data sources and access plan
+## 6. Exact data sources and access status
 
-- **Name and URL/API endpoint:** Historical Loan Dataset (887k observations) hosted on Google Drive.
-- **Licence or permission to use:** Openly accessible/shared academic dataset.
-- **Access method:** Direct programmatic download using `gdown` or reading a locally downloaded CSV placed in the `data/` directory.
-- **Data fetch script:**
+- **Original Source:** Kaggle - [LendingClub Issued Loans Dataset](https://www.kaggle.com/datasets/husainsb/lendingclub-issued-loans?resource=download)
+- **Access Status:** Downloaded and mirrored to a shared Google Drive: [Drive Link](https://drive.google.com/drive/u/2/folders/1V1iKS0rcghr6K5paWJDK38X3K8lmDn5P)
+- **Probe Path:** Data will live in `data/raw/lc_loan.csv`.
+
 ```python
 import pandas as pd
 import os
 
-# Assuming data is placed in the data directory after being downloaded from Drive
-file_path = "data/raw_loan_data.csv"
-if os.path.exists(file_path):
-    df = pd.read_csv(file_path, nrows=1)
-    print(df[['loanstatus', 'loan_amnt', 'int_rate', 'grade']])
-else:
-    print("Please download the raw data from the provided Google Drive link into the data/ folder.")
+data_path = os.path.join("data", "raw", "lc_loan.csv")
+
+def probe_data():
+    if os.path.exists(data_path):
+        df_probe = pd.read_csv(data_path, nrows=5)
+        print(f"✅ Data successfully loaded. Columns: {df_probe[['loan_status', 'loan_amnt', 'dti']].columns.tolist()}")
+        return True
+    raise FileNotFoundError("❌ Data missing. Place CSV at " + data_path)
+
+if __name__ == "__main__":
+    probe_data()
 
 
 
+###7. Scope limits
+We are modeling Probability of Default (PD) only; we will not estimate Loss Given Default (LGD).
+We will strictly drop post-approval behavioral variables (e.g., recoveries, total_rec_prncp, last_pymnt_amnt) to prevent data leakage. We are building an origination/application scorecard.
 
-##7. Scope limits
-We will not estimate structural causal drivers of default (e.g., how macroeconomic shocks impact default rates).
-We are modeling Probability of Default (PD) only; we will not estimate Loss Given Default (LGD) or Exposure at Default (EAD).
-We will drop variables that reflect post-default outcomes (e.g., collections, recoveries) as they introduce target leakage.
-We will not deploy the model as a live, consumer-facing API or web application.
+###8. Risks and fallback
+Risk: SHAP values from the LightGBM model exhibit wild non-linearities that cannot be smoothed into a monotonic, compliant scorecard format. Fallback: Enforce monotonic constraints natively inside the LightGBM hyperparameters (monotone_constraints), forcing the algorithm to only learn regulatory-compliant trees before extracting SHAP values.
 
-
-##8. Risks and fallback
-Risk: The automated Weight of Evidence (WoE) binning algorithm fails to find logical, monotonic relationships for highly predictive but non-linear continuous variables, causing a massive drop in scorecard performance.
-Fallback: We will manually enforce equal-frequency decile binning for problematic variables and group them using business domain logic, or fall back to spline-transformed logistic regression to capture non-linearities while retaining additive interpretability.
-
-
-##9. Reproducibility checklist
- uv run main.py runs end-to-end in under 10 minutes on a clean machine with no manual intervention.
- It writes outputs/primary_metric.json containing a single JSON object with at least {"metric_name": "ROC-AUC", "value": <number>, "threshold": 0.70, "passed": <bool>}.
- It writes outputs/baseline_metric.json in the same shape.
- A README.md documents the commands and expected outputs in ≤ 20 lines.
- All data sources are either fetched in-script or committed under data/ with a licence note (or clear script instructions on fetching large files).
-Sign-off
-By submitting this charter, the team agrees that this is the plan the project will be graded against. The instructor will not penalize you just because the topic turns out to be difficult, as long as the project stays honest and within the approved scope.
+###9. Reproducibility checklist
+uv run main.py runs end-to-end.
+Writes outputs/primary_metric.json containing {"metric_name": "ROC-AUC", "value": <num>, "KS": <num>, "Brier": <num>}.
+Writes outputs/scorecard_comparison.csv showing point allocations for both WoE and SHAP methods.
+README.md documents commands and expected outputs.
 
 Signed:  Suryashis, Vignesh, Vishvas
