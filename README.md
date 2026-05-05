@@ -140,6 +140,6 @@ The proposed design also provides a strong applied example of how data preproces
 This repository documents the proposed modeling framework and project design. It is not meant to foreground final empirical results at this stage; instead, it explains the research objective, data source, modeling logic, and intended workflow so that the project can be reviewed as a coherent proposal.
 
 ## Results
-- Model AUC: (fill in your result)
-- Gini Coefficient: (fill in your result)
+- Model AUC: 0.7742
+- Gini Coefficient: 0.5484
 - Final scorecard available in `outputs/tables/final_scorecard.csv`
