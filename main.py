@@ -151,8 +151,9 @@ ks_stat_primary, _ = ks_2samp(
 )
 
 THRESHOLD = 0.72
-passed = primary_auc >= THRESHOLD
-
+LIFT_THRESHOLD = 0.04
+lift = primary_auc - baseline_auc
+passed = (primary_auc >= THRESHOLD) and (lift >= LIFT_THRESHOLD)
 print(f"  Primary ROC-AUC: {primary_auc:.4f}  (threshold {THRESHOLD}) — {'PASS ✅' if passed else 'FAIL ❌'}")
 
 primary_metric = {
@@ -161,6 +162,8 @@ primary_metric = {
     "value": round(float(primary_auc), 6),
     "passed": passed,
     "threshold": THRESHOLD,
+    "lift_over_baseline": round(float(lift), 6),
+    "lift_threshold": LIFT_THRESHOLD,
     "baseline_logreg_auc": round(float(baseline_auc), 6),
     "KS": round(float(ks_stat_primary), 6),
     "Brier": round(float(primary_brier), 6),
@@ -241,12 +244,12 @@ manifest = {
     "primary_passed": passed,
     "gini_coefficient": round(float(2 * primary_auc - 1), 6),
     "hypothesis_result": (
-        f"SUPPORTED: LightGBM AUC ({primary_auc:.4f}) exceeds vanilla LR AUC "
-        f"({baseline_auc:.4f}) by {primary_auc - baseline_auc:.4f}, "
-        f"clearing the 0.04 threshold"
-        if passed else
-        f"NOT SUPPORTED: LightGBM AUC ({primary_auc:.4f}) did not reach 0.72 threshold"
-    ),
+    f"{'SUPPORTED' if passed else 'NOT SUPPORTED'}: "
+    f"LightGBM AUC = {primary_auc:.4f}, LR baseline AUC = {baseline_auc:.4f}, "
+    f"lift = {lift:.4f} (required >= {LIFT_THRESHOLD}), "
+    f"AUC threshold passed = {primary_auc >= THRESHOLD}, "
+    f"lift threshold passed = {lift >= LIFT_THRESHOLD}"
+),
 }
 
 with open(os.path.join(OUTPUTS_DIR, "milestone_manifest.json"), "w") as f:
