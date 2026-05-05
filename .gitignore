@@ -1,0 +1,12 @@
+# Data files (too large for version control — use Drive link in data/raw_data_link.md)
+*.csv
+data/raw/
+
+# Python cache
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# IDE files
+.idea/
+.vscode/

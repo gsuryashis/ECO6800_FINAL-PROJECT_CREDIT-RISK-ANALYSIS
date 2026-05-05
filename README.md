@@ -1,5 +1,17 @@
 # Credit Risk Scorecard Development
 
+## How to Run
+
+1. Download data from [Google Drive](https://drive.google.com/drive/u/2/folders/1V1iKS0rcghr6K5paWJDK38X3K8lmDn5P) into `data/raw/` as `lc_loan.csv`
+2. Install dependencies: `pip install -r requirements.txt`
+3. Run scripts in order:
+   - `src/pre_processing.py`
+   - `src/EDA.py`
+   - `src/woe2.py`
+   - `src/model.py`
+   - `src/score_card.py`
+   - `src/score_new_loans.py`
+
 This repository contains a proposal for a credit risk scorecard project designed to predict the probability that a borrower will default on a loan. The project is framed as an interpretable, end-to-end scorecard pipeline rather than a black-box prediction exercise, making it suitable for academic review and discussion.
 
 ## Project Overview
@@ -126,3 +138,8 @@ The proposed design also provides a strong applied example of how data preproces
 ## Notes for Review
 
 This repository documents the proposed modeling framework and project design. It is not meant to foreground final empirical results at this stage; instead, it explains the research objective, data source, modeling logic, and intended workflow so that the project can be reviewed as a coherent proposal.
+
+## Results
+- Model AUC: (fill in your result)
+- Gini Coefficient: (fill in your result)
+- Final scorecard available in `outputs/tables/final_scorecard.csv`
