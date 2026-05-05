@@ -1,0 +1,184 @@
+Feature,Category,Points
+int_rate,"(-inf, 7.69]",566.0
+int_rate,"(7.69, 9.17]",551.0
+int_rate,"(9.17, 10.99]",523.0
+int_rate,"(10.99, 11.99]",512.0
+int_rate,"(11.99, 12.99]",509.0
+int_rate,"(12.99, 13.99]",501.0
+int_rate,"(13.99, 15.37]",474.0
+int_rate,"(15.37, 16.99]",479.0
+int_rate,"(16.99, 18.99]",468.0
+int_rate,"(18.99, inf]",445.0
+sub_grade,A1,463.0
+sub_grade,A2,470.0
+sub_grade,A3,475.0
+sub_grade,A4,480.0
+sub_grade,A5,479.0
+sub_grade,B1,483.0
+sub_grade,B2,486.0
+sub_grade,B3,489.0
+sub_grade,B4,490.0
+sub_grade,B5,490.0
+sub_grade,C1,491.0
+sub_grade,C2,492.0
+sub_grade,C3,493.0
+sub_grade,C4,493.0
+sub_grade,C5,496.0
+sub_grade,D1,497.0
+sub_grade,D2,500.0
+sub_grade,D3,500.0
+sub_grade,D4,501.0
+sub_grade,D5,501.0
+sub_grade,E1,500.0
+sub_grade,E2,502.0
+sub_grade,E3,502.0
+sub_grade,E4,504.0
+sub_grade,E5,505.0
+sub_grade,F1,505.0
+sub_grade,F2,507.0
+sub_grade,F3,510.0
+sub_grade,F4,511.0
+sub_grade,F5,513.0
+sub_grade,G1,512.0
+sub_grade,G2,511.0
+sub_grade,G3,511.0
+sub_grade,G4,507.0
+sub_grade,G5,511.0
+grade,A,475.0
+grade,B,487.0
+grade,C,493.0
+grade,D,500.0
+grade,E,503.0
+grade,F,510.0
+grade,G,512.0
+initial_list_status,f,487.0
+initial_list_status,w,503.0
+total_rev_hi_lim,"(-inf, 8700.0]",493.0
+total_rev_hi_lim,"(8700.0, 12800.0]",493.0
+total_rev_hi_lim,"(12800.0, 16600.0]",493.0
+total_rev_hi_lim,"(16600.0, 20800.0]",494.0
+total_rev_hi_lim,"(20800.0, 23700.0]",484.0
+total_rev_hi_lim,"(23700.0, 26900.0]",494.0
+total_rev_hi_lim,"(26900.0, 33600.0]",495.0
+total_rev_hi_lim,"(33600.0, 43100.0]",496.0
+total_rev_hi_lim,"(43100.0, 60300.0]",499.0
+total_rev_hi_lim,"(60300.0, inf]",503.0
+total_pymnt,"(-inf, 690.15]",521.0
+total_pymnt,"(690.15, 1476.698]",499.0
+total_pymnt,"(1476.698, 2391.664]",490.0
+total_pymnt,"(2391.664, 3495.28]",484.0
+total_pymnt,"(3495.28, 4894.999]",481.0
+total_pymnt,"(4894.999, 6633.718]",482.0
+total_pymnt,"(6633.718, 9031.32]",484.0
+total_pymnt,"(9031.32, 12377.06]",491.0
+total_pymnt,"(12377.06, 18254.58]",499.0
+total_pymnt,"(18254.58, inf]",525.0
+tot_cur_bal,"(-inf, 15444.0]",493.0
+tot_cur_bal,"(15444.0, 26389.0]",492.0
+tot_cur_bal,"(26389.0, 39018.0]",494.0
+tot_cur_bal,"(39018.0, 59066.0]",495.0
+tot_cur_bal,"(59066.0, 80559.0]",480.0
+tot_cur_bal,"(80559.0, 111706.8]",496.0
+tot_cur_bal,"(111706.8, 167409.0]",496.0
+tot_cur_bal,"(167409.0, 228646.8]",497.0
+tot_cur_bal,"(228646.8, 322884.0]",500.0
+tot_cur_bal,"(322884.0, inf]",505.0
+annual_inc,"(-inf, 34000.0]",491.0
+annual_inc,"(34000.0, 42000.0]",491.0
+annual_inc,"(42000.0, 50000.0]",492.0
+annual_inc,"(50000.0, 56000.0]",493.0
+annual_inc,"(56000.0, 65000.0]",493.0
+annual_inc,"(65000.0, 72000.0]",493.0
+annual_inc,"(72000.0, 83500.0]",494.0
+annual_inc,"(83500.0, 98500.0]",494.0
+annual_inc,"(98500.0, 124800.0]",495.0
+annual_inc,"(124800.0, inf]",496.0
+inq_last_6mths,"(-inf, 1.0]",495.0
+inq_last_6mths,"(1.0, 2.0]",486.0
+inq_last_6mths,"(2.0, inf]",483.0
+purpose,car,493.0
+purpose,credit_card,496.0
+purpose,debt_consolidation,493.0
+purpose,educational,484.0
+purpose,home_improvement,495.0
+purpose,house,489.0
+purpose,major_purchase,493.0
+purpose,medical,490.0
+purpose,moving,489.0
+purpose,other,490.0
+purpose,renewable_energy,487.0
+purpose,small_business,484.0
+purpose,vacation,492.0
+purpose,wedding,485.0
+verification_status,Not Verified,496.0
+verification_status,Source Verified,498.0
+verification_status,Verified,487.0
+revol_util,"(-inf, 22.3]",495.0
+revol_util,"(22.3, 33.3]",495.0
+revol_util,"(33.3, 41.7]",495.0
+revol_util,"(41.7, 49.1]",494.0
+revol_util,"(49.1, 56.0]",493.0
+revol_util,"(56.0, 62.8]",493.0
+revol_util,"(62.8, 69.8]",492.0
+revol_util,"(69.8, 77.5]",492.0
+revol_util,"(77.5, 86.7]",491.0
+revol_util,"(86.7, inf]",491.0
+addr_state,AK,497.0
+addr_state,AL,489.0
+addr_state,AR,493.0
+addr_state,AZ,493.0
+addr_state,CA,490.0
+addr_state,CO,498.0
+addr_state,CT,496.0
+addr_state,DC,502.0
+addr_state,DE,494.0
+addr_state,FL,490.0
+addr_state,GA,495.0
+addr_state,HI,489.0
+addr_state,IA,485.0
+addr_state,ID,481.0
+addr_state,IL,497.0
+addr_state,IN,496.0
+addr_state,KS,497.0
+addr_state,KY,493.0
+addr_state,LA,492.0
+addr_state,MA,494.0
+addr_state,MD,492.0
+addr_state,ME,802.0
+addr_state,MI,493.0
+addr_state,MN,493.0
+addr_state,MO,491.0
+addr_state,MS,513.0
+addr_state,MT,500.0
+addr_state,NC,492.0
+addr_state,ND,799.0
+addr_state,NE,561.0
+addr_state,NH,502.0
+addr_state,NJ,491.0
+addr_state,NM,491.0
+addr_state,NV,487.0
+addr_state,NY,491.0
+addr_state,OH,494.0
+addr_state,OK,493.0
+addr_state,OR,494.0
+addr_state,PA,494.0
+addr_state,RI,494.0
+addr_state,SC,498.0
+addr_state,SD,494.0
+addr_state,TN,497.0
+addr_state,TX,497.0
+addr_state,UT,491.0
+addr_state,VA,491.0
+addr_state,VT,500.0
+addr_state,WA,493.0
+addr_state,WI,496.0
+addr_state,WV,501.0
+addr_state,WY,499.0
+mths_since_last_record,"(-inf, 81.0]",511.0
+mths_since_last_record,"(81.0, inf]",491.0
+home_ownership,ANY,483.0
+home_ownership,MORTGAGE,493.0
+home_ownership,NONE,494.0
+home_ownership,OTHER,494.0
+home_ownership,OWN,493.0
+home_ownership,RENT,493.0
