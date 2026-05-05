@@ -1,11 +1,13 @@
+import os
 import pandas as pd
 import numpy as np
 import pickle
 
 # --- Configuration ---
-MODEL_ARTIFACTS_PATH = 'scorecard_artifacts.pkl'
-WOE_TABLES_PATH = 'woe_tables.pkl'
-SCORECARD_PATH = 'final_scorecard.csv'
+_BASE = os.path.join(os.path.dirname(__file__), '..')
+MODEL_ARTIFACTS_PATH = os.path.join(_BASE, 'outputs', 'artifacts', 'scorecard_artifacts.pkl')
+WOE_TABLES_PATH = os.path.join(_BASE, 'outputs', 'artifacts', 'woe_tables.pkl')
+SCORECARD_PATH = os.path.join(_BASE, 'outputs', 'tables', 'final_scorecard.csv')
 
 # Scorecard Scaling Parameters
 TARGET_SCORE = 600

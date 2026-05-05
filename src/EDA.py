@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -7,8 +8,11 @@ import warnings
 
 warnings.filterwarnings('ignore')
 
+# --- File Paths ---
+_BASE = os.path.join(os.path.dirname(__file__), '..')
+
 # Load the cleaned dataset
-df = pd.read_csv('loan_data_cleaned.csv')
+df = pd.read_csv(os.path.join(_BASE, 'data', 'raw', 'loan_data_cleaned.csv'))
 
 print(f"Dataset shape: {df.shape}")
 print(f"Default rate: {df['default_status'].mean() * 100:.2f}%")
@@ -171,7 +175,18 @@ plt.xlabel('Grade')
 plt.ylabel('Interest Rate (%)')
 
 plt.tight_layout()
+plt.savefig(os.path.join(_BASE, 'outputs', 'figures', 'default_rate_by_grade.png'), dpi=150, bbox_inches='tight')
 plt.show()
+
+# Save interest rate vs grade boxplot separately
+plt.figure(figsize=(10, 6))
+sns.boxplot(data=df, x='grade', y='int_rate', hue='default_status')
+plt.title('Interest Rate Distribution by Grade and Default Status')
+plt.xlabel('Grade')
+plt.ylabel('Interest Rate (%)')
+plt.tight_layout()
+plt.savefig(os.path.join(_BASE, 'outputs', 'figures', 'intrate_by_grade.png'), dpi=150, bbox_inches='tight')
+plt.close()
 
 # Print grade-wise statistics
 print("Grade-wise Default Rates and Interest Rates:")
@@ -184,6 +199,7 @@ grade_stats = df.groupby('grade').agg({
 grade_stats.columns = ['Total_Loans', 'Defaults', 'Default_Rate', 'Avg_Interest_Rate',
                        'Interest_Rate_Std', 'Avg_Loan_Amount']
 print(grade_stats)
+grade_stats.to_csv(os.path.join(_BASE, 'outputs', 'tables', 'grade_default_rates.csv'))
 
 # 5. LOAN PURPOSE ANALYSIS
 print("\n\n5. LOAN PURPOSE ANALYSIS")
