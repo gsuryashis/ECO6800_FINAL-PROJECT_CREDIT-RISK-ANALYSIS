@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -11,9 +12,10 @@ warnings.filterwarnings('ignore')
 pd.set_option('display.max_rows', 100)
 
 # --- File Paths ---
-INPUT_CSV = 'loan_data_cleaned.csv'
-OUTPUT_WOE_CSV = 'loan_data_woe_transformed.csv'
-OUTPUT_IV_CSV = 'variable_selection_results.csv'
+_BASE = os.path.join(os.path.dirname(__file__), '..')
+INPUT_CSV = os.path.join(_BASE, 'data', 'raw', 'loan_data_cleaned.csv')
+OUTPUT_WOE_CSV = os.path.join(_BASE, 'outputs', 'artifacts', 'loan_data_woe_transformed.csv')
+OUTPUT_IV_CSV = os.path.join(_BASE, 'outputs', 'tables', 'variable_selection_results.csv')
 
 # --- Variable Lists for Removal ---
 # These variables are removed before any analysis is done.
@@ -212,6 +214,7 @@ ax.axvline(x=0.3, color='red', linestyle='--', label='Strong Threshold (0.3)')
 ax.legend()
 
 plt.tight_layout()
+plt.savefig(os.path.join(_BASE, 'outputs', 'figures', 'iv_scores.png'), dpi=150, bbox_inches='tight')
 plt.show()
 
 print("\n--- SCRIPT COMPLETE ---")
@@ -219,7 +222,7 @@ print("Next step is to use the 'loan_data_woe_transformed.csv' file to build you
 # --- At the end of woe2.py ---
 
 # Add this line before the script finishes
-with open('woe_tables.pkl', 'wb') as f:
+with open(os.path.join(_BASE, 'outputs', 'artifacts', 'woe_tables.pkl'), 'wb') as f:
     pickle.dump(woe_tables, f)
 
 print("✅ WoE tables saved to 'woe_tables.pkl'")

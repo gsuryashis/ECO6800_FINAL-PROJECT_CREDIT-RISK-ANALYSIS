@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import numpy as np
 import pickle
@@ -8,8 +9,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # --- Configuration ---
-WOE_DATA_PATH = 'loan_data_woe_transformed.csv'
-MODEL_ARTIFACTS_PATH = 'scorecard_artifacts.pkl'
+_BASE = os.path.join(os.path.dirname(__file__), '..')
+WOE_DATA_PATH = os.path.join(_BASE, 'outputs', 'artifacts', 'loan_data_woe_transformed.csv')
+MODEL_ARTIFACTS_PATH = os.path.join(_BASE, 'outputs', 'artifacts', 'scorecard_artifacts.pkl')
 TARGET_VARIABLE = 'default_status'
 
 # --- Main Script ---
@@ -55,6 +57,7 @@ plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
 plt.title('Receiver Operating Characteristic (ROC) Curve')
 plt.legend()
+plt.savefig(os.path.join(_BASE, 'outputs', 'figures', 'roc_curve.png'), dpi=150, bbox_inches='tight')
 plt.show()
 
 # 5. Save Model and Column List
