@@ -45,9 +45,12 @@ uv run main.py
 
 | File | Contents |
 |---|---|
-| `outputs/baseline_metric.json` | Vanilla logistic regression ROC-AUC |
-| `outputs/primary_metric.json` | LightGBM ROC-AUC + pass/fail against 0.72 threshold |
-| `outputs/milestone_manifest.json` | Run summary linking all output files |
+| `outputs/baseline_metric.json` | Vanilla logistic regression ROC-AUC, KS, and Brier score |
+| `outputs/primary_metric.json` | LightGBM ROC-AUC + pass/fail against 0.72 threshold, KS, Brier |
+| `outputs/milestone_manifest.json` | Run summary with Gini coefficient and links to all output files |
+| `outputs/scorecard_comparison.csv` | WoE scorecard point ranges vs. SHAP-based LightGBM feature importances |
+
+Pre-computed versions of these files are committed to the repo and will be overwritten by a fresh run.
 
 ### Detailed pipeline (individual scripts)
 
@@ -185,6 +188,14 @@ The proposed design also provides a strong applied example of how data preproces
 
 
 ## Results
-- Model AUC: 0.7742
-- Gini Coefficient: 0.5484
-- Final scorecard available in `outputs/tables/final_scorecard.csv`
+
+| Metric | Vanilla LR Baseline | LightGBM (Primary) |
+|---|---|---|
+| ROC-AUC | 0.6920 | **0.7742** |
+| Gini Coefficient | 0.3840 | **0.5484** |
+| KS Statistic | 0.3218 | 0.4283 |
+| Brier Score | 0.1486 | 0.1219 |
+
+- **Hypothesis supported:** LightGBM AUC (0.7742) exceeds vanilla LR AUC (0.6920) by 0.0822, well above the 0.04 threshold.
+- Final WoE scorecard available in `outputs/tables/final_scorecard.csv`
+- Model comparison available in `outputs/scorecard_comparison.csv`
