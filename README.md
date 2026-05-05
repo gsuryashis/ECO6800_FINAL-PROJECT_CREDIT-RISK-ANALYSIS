@@ -135,9 +135,6 @@ Credit risk modeling is central to lending decisions because it helps institutio
 
 The proposed design also provides a strong applied example of how data preprocessing, careful target definition, leakage control, and model validation matter in real-world predictive analytics.
 
-## Notes for Review
-
-This repository documents the proposed modeling framework and project design. It is not meant to foreground final empirical results at this stage; instead, it explains the research objective, data source, modeling logic, and intended workflow so that the project can be reviewed as a coherent proposal.
 
 ## Results
 - Model AUC: 0.7742
