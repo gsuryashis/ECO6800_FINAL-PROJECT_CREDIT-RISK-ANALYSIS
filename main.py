@@ -2,9 +2,10 @@
 main.py — ECO 6800 Credit Risk Analysis Pipeline
 Run: uv run main.py
 
-Writes three files to outputs/:
+Writes four files to outputs/:
   baseline_metric.json    — vanilla logistic regression ROC-AUC
   primary_metric.json     — LightGBM ROC-AUC (primary success criterion)
+  scorecard_comparison.csv — WoE scorecard point ranges vs. SHAP-based LightGBM importances
   milestone_manifest.json — summary of all outputs produced
 """
 
@@ -19,6 +20,7 @@ from sklearn.metrics import roc_auc_score, brier_score_loss
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import lightgbm as lgb
+import shap
 
 warnings.filterwarnings("ignore")
 
@@ -169,7 +171,57 @@ with open(os.path.join(OUTPUTS_DIR, "primary_metric.json"), "w") as f:
 print(f"  ✅ Saved outputs/primary_metric.json")
 
 # ---------------------------------------------------------------------------
-# 6. Milestone manifest
+# 6. Scorecard comparison — WoE scorecard vs. SHAP-based LightGBM scores
+# ---------------------------------------------------------------------------
+print("\nBuilding scorecard comparison …")
+
+# Compute SHAP values on a sample of the test set (max 5 000 rows for speed)
+sample_size = min(5000, len(X_test))
+X_sample = X_test.sample(n=sample_size, random_state=42)
+
+explainer = shap.TreeExplainer(lgb_model)
+shap_values = explainer.shap_values(X_sample)
+# For binary classifiers shap_values may be a list [neg_class, pos_class]
+if isinstance(shap_values, list):
+    shap_values = shap_values[1]
+
+mean_abs_shap = pd.Series(
+    np.abs(shap_values).mean(axis=0),
+    index=numeric_features,
+    name="SHAP_Mean_Abs_Importance",
+)
+
+# Scale SHAP importances to a 0-100 point range for scorecard comparison
+shap_max = mean_abs_shap.max()
+shap_score_range = (mean_abs_shap / shap_max * 100).round(1).rename("SHAP_Score_Range")
+
+# Load WoE scorecard if it exists, otherwise build a feature-level summary
+woe_scorecard_path = os.path.join(OUTPUTS_DIR, "tables", "final_scorecard.csv")
+if os.path.exists(woe_scorecard_path):
+    woe_sc = pd.read_csv(woe_scorecard_path)
+    woe_summary = woe_sc.groupby("Feature")["Points"].agg(
+        WoE_Min_Points="min",
+        WoE_Max_Points="max",
+        WoE_Point_Range=lambda x: x.max() - x.min(),
+    ).reset_index()
+else:
+    woe_summary = pd.DataFrame(columns=["Feature", "WoE_Min_Points", "WoE_Max_Points", "WoE_Point_Range"])
+
+shap_df = pd.DataFrame({
+    "Feature": mean_abs_shap.index,
+    "SHAP_Mean_Abs_Importance": mean_abs_shap.round(6).values,
+    "SHAP_Score_Range": shap_score_range.values,
+})
+
+comparison = woe_summary.merge(shap_df, on="Feature", how="outer").sort_values(
+    "SHAP_Mean_Abs_Importance", ascending=False, na_position="last"
+)
+
+comparison.to_csv(os.path.join(OUTPUTS_DIR, "scorecard_comparison.csv"), index=False)
+print(f"  ✅ Saved outputs/scorecard_comparison.csv  ({len(comparison)} features)")
+
+# ---------------------------------------------------------------------------
+# 7. Milestone manifest
 # ---------------------------------------------------------------------------
 import datetime
 
@@ -182,10 +234,19 @@ manifest = {
         "baseline_metric": "outputs/baseline_metric.json",
         "primary_metric": "outputs/primary_metric.json",
         "milestone_manifest": "outputs/milestone_manifest.json",
+        "scorecard_comparison": "outputs/scorecard_comparison.csv",
     },
     "baseline_roc_auc": round(float(baseline_auc), 6),
     "primary_roc_auc": round(float(primary_auc), 6),
     "primary_passed": passed,
+    "gini_coefficient": round(float(2 * primary_auc - 1), 6),
+    "hypothesis_result": (
+        f"SUPPORTED: LightGBM AUC ({primary_auc:.4f}) exceeds vanilla LR AUC "
+        f"({baseline_auc:.4f}) by {primary_auc - baseline_auc:.4f}, "
+        f"clearing the 0.04 threshold"
+        if passed else
+        f"NOT SUPPORTED: LightGBM AUC ({primary_auc:.4f}) did not reach 0.72 threshold"
+    ),
 }
 
 with open(os.path.join(OUTPUTS_DIR, "milestone_manifest.json"), "w") as f:

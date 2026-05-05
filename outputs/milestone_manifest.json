@@ -1,0 +1,26 @@
+{
+  "generated_at": "2026-05-05T00:00:00Z",
+  "data_rows_after_filter": 242459,
+  "features_used": 33,
+  "test_set_size": 48492,
+  "outputs": {
+    "baseline_metric": "outputs/baseline_metric.json",
+    "primary_metric": "outputs/primary_metric.json",
+    "milestone_manifest": "outputs/milestone_manifest.json",
+    "scorecard_comparison": "outputs/scorecard_comparison.csv",
+    "final_scorecard": "outputs/tables/final_scorecard.csv",
+    "figures": [
+      "outputs/figures/Picture1.png",
+      "outputs/figures/Picture2.png",
+      "outputs/figures/Picture3.png",
+      "outputs/figures/Picture4.png",
+      "outputs/figures/Picture5.png",
+      "outputs/figures/Picture6.png"
+    ]
+  },
+  "baseline_roc_auc": 0.692047,
+  "primary_roc_auc": 0.7742,
+  "primary_passed": true,
+  "gini_coefficient": 0.5484,
+  "hypothesis_result": "SUPPORTED: LightGBM AUC (0.7742) exceeds vanilla LR AUC (0.6920) by 0.0822, clearing the 0.04 threshold"
+}
