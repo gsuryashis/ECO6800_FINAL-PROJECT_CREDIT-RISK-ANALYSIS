@@ -1,6 +1,6 @@
 # Credit Risk Scorecard Development
 
-## Quick start (milestone check)
+## Quick start
 
 ### 1 — Place the data file
 
