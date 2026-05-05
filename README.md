@@ -1,16 +1,64 @@
 # Credit Risk Scorecard Development
 
-## How to Run
+## Quick start (milestone check)
 
-1. Download data from [Google Drive](https://drive.google.com/drive/u/2/folders/1V1iKS0rcghr6K5paWJDK38X3K8lmDn5P) into `data/raw/` as `lc_loan.csv`
-2. Install dependencies: `pip install -r requirements.txt`
-3. Run scripts in order:
-   - `src/pre_processing.py`
-   - `src/EDA.py`
-   - `src/woe2.py`
-   - `src/model.py`
-   - `src/score_card.py`
-   - `src/score_new_loans.py`
+### 1 — Place the data file
+
+Download `lc_loan.csv` from one of the sources below and put it at exactly this path inside the repo:
+
+```
+data/raw/lc_loan.csv
+```
+
+Sources:
+
+- Google Drive: <https://drive.google.com/drive/u/2/folders/1V1iKS0rcghr6K5paWJDK38X3K8lmDn5P>
+- Kaggle: <https://www.kaggle.com/datasets/husainsb/lendingclub-issued-loans>
+
+### 2 — Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+Or with [uv](https://github.com/astral-sh/uv):
+
+```bash
+uv pip install -r requirements.txt
+```
+
+### 3 — (Optional) probe the data file
+
+```bash
+uv run scripts/probe_data.py
+```
+
+This verifies the file exists and contains the expected columns.
+
+### 4 — Run the full pipeline
+
+```bash
+uv run main.py
+```
+
+**Expected outputs** (written to `outputs/`):
+
+| File | Contents |
+|---|---|
+| `outputs/baseline_metric.json` | Vanilla logistic regression ROC-AUC |
+| `outputs/primary_metric.json` | LightGBM ROC-AUC + pass/fail against 0.72 threshold |
+| `outputs/milestone_manifest.json` | Run summary linking all output files |
+
+### Detailed pipeline (individual scripts)
+
+Run scripts in order if you want the full WoE scorecard pipeline:
+
+1. `src/pre_processing.py`
+2. `src/EDA.py`
+3. `src/woe2.py`
+4. `src/model.py`
+5. `src/score_card.py`
+6. `src/score_new_loans.py`
 
 This repository contains a proposal for a credit risk scorecard project designed to predict the probability that a borrower will default on a loan. The project is framed as an interpretable, end-to-end scorecard pipeline rather than a black-box prediction exercise, making it suitable for academic review and discussion.
 
