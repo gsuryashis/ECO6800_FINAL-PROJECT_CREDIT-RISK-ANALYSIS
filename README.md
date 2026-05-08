@@ -10,6 +10,8 @@
 data/fallback/lc_loan.csv
 ```
 
+> Note: `data/fallback/lc_loan.csv` is a small synthetic compatibility dataset included only for reproducibility/testing on clean machines. It is not the full LendingClub source dataset used for final project analysis.
+
 To run with the full LendingClub dataset instead, download `lc_loan.csv` from one of the sources below and put it at exactly this path inside the repo:
 
 ```
