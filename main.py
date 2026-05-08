@@ -35,7 +35,7 @@ os.makedirs(OUTPUTS_DIR, exist_ok=True)
 
 def resolve_data_path():
     if os.path.exists(DATA_PATH):
-        return DATA_PATH, "raw_dataset"
+        return DATA_PATH, "raw"
     if os.path.exists(FALLBACK_DATA_PATH):
         return FALLBACK_DATA_PATH, "fallback"
     raise FileNotFoundError(
@@ -53,6 +53,8 @@ print("Loading data …")
 resolved_data_path, data_mode = resolve_data_path()
 if data_mode == "fallback":
     print(f"  ⚠️ Raw data missing; using fallback sample at {resolved_data_path}")
+else:
+    print(f"  Using raw dataset at {resolved_data_path}")
 df = pd.read_csv(resolved_data_path, low_memory=False)
 print(f"  Loaded {df.shape[0]:,} rows × {df.shape[1]} columns")
 
