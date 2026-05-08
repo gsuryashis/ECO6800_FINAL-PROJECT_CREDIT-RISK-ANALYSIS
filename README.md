@@ -2,9 +2,15 @@
 
 ## Quick start
 
-### 1 — Place the data file
+### 1 — Data file behavior
 
-Download `lc_loan.csv` from one of the sources below and put it at exactly this path inside the repo:
+`uv run main.py` and `uv run scripts/probe_data.py` now work on a clean clone using the committed fallback sample:
+
+```
+data/fallback/lc_loan.csv
+```
+
+To run with the full LendingClub dataset instead, download `lc_loan.csv` from one of the sources below and put it at exactly this path inside the repo:
 
 ```
 data/raw/lc_loan.csv

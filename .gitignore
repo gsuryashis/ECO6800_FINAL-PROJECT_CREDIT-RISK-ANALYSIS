@@ -1,6 +1,8 @@
 # Data files (too large for version control — use Drive link in data/raw_data_link.md)
 *.csv
 data/raw/
+!data/fallback/
+!data/fallback/lc_loan.csv
 
 # Allow output deliverable CSVs
 !outputs/tables/*.csv
