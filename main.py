@@ -35,7 +35,7 @@ os.makedirs(OUTPUTS_DIR, exist_ok=True)
 
 def resolve_data_path():
     if os.path.exists(DATA_PATH):
-        return DATA_PATH, "full"
+        return DATA_PATH, "raw_dataset"
     if os.path.exists(FALLBACK_DATA_PATH):
         return FALLBACK_DATA_PATH, "fallback"
     raise FileNotFoundError(
@@ -241,7 +241,7 @@ import datetime
 
 manifest = {
     "generated_at": datetime.datetime.utcnow().isoformat() + "Z",
-    "data_source_mode": data_mode,
+    "data_mode_used": data_mode,
     "data_source_path": resolved_data_path,
     "data_rows_after_filter": int(df.shape[0]),
     "features_used": int(len(numeric_features)),
