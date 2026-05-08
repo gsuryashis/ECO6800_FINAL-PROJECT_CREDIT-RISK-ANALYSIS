@@ -41,7 +41,7 @@ def resolve_data_path():
     raise FileNotFoundError(
         f"❌ Data file not found at {DATA_PATH}.\n"
         f"Fallback data file also missing at {FALLBACK_DATA_PATH}.\n"
-        "Download lc_loan.csv from Google Drive / Kaggle and place it in data/raw/, "
+        "Download lc_loan.csv from Google Drive / Kaggle and place it in data/raw/,\n"
         "or restore the committed fallback file.\n"
         "See README.md for full instructions."
     )
