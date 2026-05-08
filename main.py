@@ -28,21 +28,34 @@ warnings.filterwarnings("ignore")
 # Paths
 # ---------------------------------------------------------------------------
 DATA_PATH = os.path.join("data", "raw", "lc_loan.csv")
+FALLBACK_DATA_PATH = os.path.join("data", "fallback", "lc_loan.csv")
 OUTPUTS_DIR = "outputs"
 os.makedirs(OUTPUTS_DIR, exist_ok=True)
+
+
+def resolve_data_path():
+    if os.path.exists(DATA_PATH):
+        return DATA_PATH, "raw"
+    if os.path.exists(FALLBACK_DATA_PATH):
+        return FALLBACK_DATA_PATH, "fallback"
+    raise FileNotFoundError(
+        f"❌ Data file not found at {DATA_PATH}.\n"
+        f"Fallback data file also missing at {FALLBACK_DATA_PATH}.\n"
+        "Download lc_loan.csv from Google Drive / Kaggle and place it in data/raw/,\n"
+        "or restore the committed fallback file.\n"
+        "See README.md for full instructions."
+    )
 
 # ---------------------------------------------------------------------------
 # 1. Load & build target
 # ---------------------------------------------------------------------------
 print("Loading data …")
-if not os.path.exists(DATA_PATH):
-    raise FileNotFoundError(
-        f"❌ Data file not found at {DATA_PATH!r}.\n"
-        "Download lc_loan.csv from Google Drive / Kaggle and place it there.\n"
-        "See README.md for full instructions."
-    )
-
-df = pd.read_csv(DATA_PATH, low_memory=False)
+resolved_data_path, data_mode = resolve_data_path()
+if data_mode == "fallback":
+    print(f"  ⚠️ Raw data missing; using fallback sample at {resolved_data_path}")
+else:
+    print(f"  Using raw dataset at {resolved_data_path}")
+df = pd.read_csv(resolved_data_path, low_memory=False)
 print(f"  Loaded {df.shape[0]:,} rows × {df.shape[1]} columns")
 
 # Keep only terminal loan statuses (exclude right-censored)
@@ -230,6 +243,8 @@ import datetime
 
 manifest = {
     "generated_at": datetime.datetime.utcnow().isoformat() + "Z",
+    "data_mode_used": data_mode,
+    "data_source_path": resolved_data_path,
     "data_rows_after_filter": int(df.shape[0]),
     "features_used": int(len(numeric_features)),
     "test_set_size": int(len(X_test)),
