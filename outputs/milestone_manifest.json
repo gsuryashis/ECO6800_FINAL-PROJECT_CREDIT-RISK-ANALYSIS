@@ -1,26 +1,29 @@
 {
-  "generated_at": "2026-05-05T00:00:00Z",
-  "data_rows_after_filter": 242459,
-  "features_used": 33,
-  "test_set_size": 48492,
+  "generated_at": "2026-05-09T06:17:44.174496Z",
+  "data_mode_used": "fallback",
+  "data_source_path": "data/fallback/lc_loan.csv",
+  "source_access_proof": {
+    "expected_raw_path": "data/raw/lc_loan.csv",
+    "fallback_sample_path": "data/fallback/lc_loan.csv",
+    "probe_script": "scripts/probe_data.py",
+    "source_reference_file": "data/raw_data_link.md",
+    "external_sources": [
+      "https://drive.google.com/drive/u/2/folders/1V1iKS0rcghr6K5paWJDK38X3K8lmDn5P",
+      "https://www.kaggle.com/datasets/husainsb/lendingclub-issued-loans"
+    ]
+  },
+  "data_rows_after_filter": 1200,
+  "features_used": 7,
+  "test_set_size": 240,
   "outputs": {
     "baseline_metric": "outputs/baseline_metric.json",
     "primary_metric": "outputs/primary_metric.json",
     "milestone_manifest": "outputs/milestone_manifest.json",
-    "scorecard_comparison": "outputs/scorecard_comparison.csv",
-    "final_scorecard": "outputs/tables/final_scorecard.csv",
-    "figures": [
-      "outputs/figures/Picture1.png",
-      "outputs/figures/Picture2.png",
-      "outputs/figures/Picture3.png",
-      "outputs/figures/Picture4.png",
-      "outputs/figures/Picture5.png",
-      "outputs/figures/Picture6.png"
-    ]
+    "scorecard_comparison": "outputs/scorecard_comparison.csv"
   },
-  "baseline_roc_auc": 0.692047,
-  "primary_roc_auc": 0.7742,
+  "baseline_roc_auc": 0.755095,
+  "primary_roc_auc": 0.799216,
   "primary_passed": true,
-  "gini_coefficient": 0.5484,
-  "hypothesis_result": "SUPPORTED: LightGBM AUC (0.7742) exceeds vanilla LR AUC (0.6920) by 0.0822, clearing the 0.04 threshold"
+  "gini_coefficient": 0.598431,
+  "hypothesis_result": "SUPPORTED: LightGBM AUC = 0.7992, LR baseline AUC = 0.7551, lift = 0.0441 (required >= 0.04), AUC threshold passed = True, lift threshold passed = True"
 }

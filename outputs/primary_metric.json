@@ -1,10 +1,12 @@
 {
   "model": "LightGBM",
   "metric_name": "ROC-AUC",
-  "value": 0.7742,
+  "value": 0.799216,
   "passed": true,
   "threshold": 0.72,
-  "baseline_logreg_auc": 0.692047,
-  "KS": 0.428316,
-  "Brier": 0.121853
+  "lift_over_baseline": 0.044121,
+  "lift_threshold": 0.04,
+  "baseline_logreg_auc": 0.755095,
+  "KS": 0.544506,
+  "Brier": 0.173076
 }

@@ -23,7 +23,10 @@ Sources:
 - Google Drive: <https://drive.google.com/drive/u/2/folders/1V1iKS0rcghr6K5paWJDK38X3K8lmDn5P>
 - Kaggle: <https://www.kaggle.com/datasets/husainsb/lendingclub-issued-loans>
 
-### 2 — Install dependencies
+### 2 — Install dependencies (optional with uv)
+
+If you use uv, dependencies are declared in `pyproject.toml`, so `uv run main.py` works directly on a fresh clone.
+`requirements.txt` now delegates to the project metadata (`.`), so `pyproject.toml` is the single dependency source of truth.
 
 ```bash
 pip install -r requirements.txt

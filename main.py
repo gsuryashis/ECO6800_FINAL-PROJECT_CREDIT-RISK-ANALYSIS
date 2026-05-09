@@ -166,7 +166,7 @@ ks_stat_primary, _ = ks_2samp(
 THRESHOLD = 0.72
 LIFT_THRESHOLD = 0.04
 lift = primary_auc - baseline_auc
-passed = (primary_auc >= THRESHOLD) and (lift >= LIFT_THRESHOLD)
+passed = bool((primary_auc >= THRESHOLD) and (lift >= LIFT_THRESHOLD))
 print(f"  Primary ROC-AUC: {primary_auc:.4f}  (threshold {THRESHOLD}) — {'PASS ✅' if passed else 'FAIL ❌'}")
 
 primary_metric = {
@@ -174,9 +174,9 @@ primary_metric = {
     "metric_name": "ROC-AUC",
     "value": round(float(primary_auc), 6),
     "passed": passed,
-    "threshold": THRESHOLD,
+    "threshold": float(THRESHOLD),
     "lift_over_baseline": round(float(lift), 6),
-    "lift_threshold": LIFT_THRESHOLD,
+    "lift_threshold": float(LIFT_THRESHOLD),
     "baseline_logreg_auc": round(float(baseline_auc), 6),
     "KS": round(float(ks_stat_primary), 6),
     "Brier": round(float(primary_brier), 6),
@@ -245,6 +245,16 @@ manifest = {
     "generated_at": datetime.datetime.utcnow().isoformat() + "Z",
     "data_mode_used": data_mode,
     "data_source_path": resolved_data_path,
+    "source_access_proof": {
+        "expected_raw_path": DATA_PATH,
+        "fallback_sample_path": FALLBACK_DATA_PATH,
+        "probe_script": "scripts/probe_data.py",
+        "source_reference_file": "data/raw_data_link.md",
+        "external_sources": [
+            "https://drive.google.com/drive/u/2/folders/1V1iKS0rcghr6K5paWJDK38X3K8lmDn5P",
+            "https://www.kaggle.com/datasets/husainsb/lendingclub-issued-loans",
+        ],
+    },
     "data_rows_after_filter": int(df.shape[0]),
     "features_used": int(len(numeric_features)),
     "test_set_size": int(len(X_test)),
@@ -262,8 +272,8 @@ manifest = {
     f"{'SUPPORTED' if passed else 'NOT SUPPORTED'}: "
     f"LightGBM AUC = {primary_auc:.4f}, LR baseline AUC = {baseline_auc:.4f}, "
     f"lift = {lift:.4f} (required >= {LIFT_THRESHOLD}), "
-    f"AUC threshold passed = {primary_auc >= THRESHOLD}, "
-    f"lift threshold passed = {lift >= LIFT_THRESHOLD}"
+    f"AUC threshold passed = {bool(primary_auc >= THRESHOLD)}, "
+    f"lift threshold passed = {bool(lift >= LIFT_THRESHOLD)}"
 ),
 }
 

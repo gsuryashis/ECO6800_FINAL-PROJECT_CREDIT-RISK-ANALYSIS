@@ -1,7 +1,7 @@
 {
   "model": "Vanilla Logistic Regression",
   "metric_name": "ROC-AUC",
-  "value": 0.692047,
-  "KS": 0.321804,
-  "Brier": 0.148612
+  "value": 0.755095,
+  "KS": 0.44695,
+  "Brier": 0.197795
 }
