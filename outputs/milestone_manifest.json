@@ -9,12 +9,7 @@
   ],
   "baseline_ready": true,
   "primary_metric_schema_ready": true,
-  "run_command": "uv run main.py"
-}
-
-
-
-{
+  "run_command": "uv run main.py",
   "generated_at": "2026-05-09T06:17:44.174496Z",
   "data_mode_used": "fallback",
   "data_source_path": "data/fallback/lc_loan.csv",
