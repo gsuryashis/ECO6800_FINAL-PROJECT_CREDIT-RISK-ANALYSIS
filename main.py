@@ -246,10 +246,33 @@ print(f"  ✅ Saved scorecard_comparison.csv  ({len(comparison)} features)")
 print("\nWriting milestone manifest …")
 
 manifest = {
+    "charter_locked"        : True,
+    "sources": [
+        {
+            "name"         : "LendingClub Issued Loans",
+            "status"       : data_mode,
+            "probe_artifact": resolved_data_path,
+        }
+    ],
+    "baseline_ready"        : os.path.exists(os.path.join(OUTPUTS_DIR, "baseline_metric.json")),
+    "primary_metric_schema_ready": all(
+        k in primary_metric for k in ("metric_name", "value", "threshold", "passed")
+    ),
+    "run_command"           : "uv run main.py",
     # FIX 3 — utcnow() deprecated in Python 3.12+
     "generated_at"          : datetime.datetime.now(datetime.timezone.utc).isoformat(),
     "data_mode_used"        : data_mode,
     "data_source_path"      : resolved_data_path,
+    "source_access_proof": {
+        "expected_raw_path"   : DATA_PATH,
+        "fallback_sample_path": FALLBACK_DATA_PATH,
+        "probe_script"        : "scripts/probe_data.py",
+        "source_reference_file": "data/raw_data_link.md",
+        "external_sources": [
+            "https://drive.google.com/drive/u/2/folders/1V1iKS0rcghr6K5paWJDK38X3K8lmDn5P",
+            "https://www.kaggle.com/datasets/husainsb/lendingclub-issued-loans",
+        ],
+    },
     "data_rows_after_filter": int(df.shape[0]),
     "features_used"         : int(len(numeric_features)),
     "test_set_size"         : int(len(X_test)),
