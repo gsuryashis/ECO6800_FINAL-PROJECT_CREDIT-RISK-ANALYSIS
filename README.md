@@ -11,7 +11,7 @@ powershell -ExecutionPolicy Bypass -c "irm https://astral.sh/uv/install.ps1 | ie
 $env:PATH += ";$env:USERPROFILE\.local\bin"
 ```
 
-Run these commands in PowerShell, then restart your terminal.
+Run these commands in PowerShell, then restart your terminal (the PATH line is session-local, so run it again if needed).
 
 `uv run main.py` and `uv run scripts/probe_data.py` now work on a clean clone using the committed fallback sample:
 
