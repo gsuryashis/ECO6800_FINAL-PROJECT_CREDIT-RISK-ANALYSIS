@@ -2,7 +2,7 @@
 
 ## Quick start
 
-### 1 — Windows uv setup and data file behavior
+### 1 — Setup
 
 If you are on Windows and need to install `uv`, run:
 
