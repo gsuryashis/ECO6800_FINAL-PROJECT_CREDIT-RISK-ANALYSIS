@@ -7,12 +7,12 @@ name = "eco6800-credit-risk-analysis"
 version = "0.1.0"
 requires-python = ">=3.10"
 dependencies = [
-  "lightgbm",
-  "matplotlib",
-  "numpy",
-  "pandas",
-  "scikit-learn",
-  "scipy",
-  "seaborn",
-  "shap",
+  "lightgbm==4.5.0",
+  "matplotlib==3.9.2",
+  "numpy==2.1.1",
+  "pandas==2.2.3",
+  "scikit-learn==1.5.2",
+  "scipy==1.14.1",
+  "seaborn==0.13.2",
+  "shap==0.46.0",
 ]
