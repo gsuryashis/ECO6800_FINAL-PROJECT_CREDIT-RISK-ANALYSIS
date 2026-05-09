@@ -246,27 +246,27 @@ print(f"  ✅ Saved scorecard_comparison.csv  ({len(comparison)} features)")
 print("\nWriting milestone manifest …")
 
 manifest = {
-    "charter_locked"        : True,
+    "charter_locked": True,
     "sources": [
         {
-            "name"         : "LendingClub Issued Loans",
-            "status"       : data_mode,
+            "name": "LendingClub Issued Loans",
+            "status": data_mode,
             "probe_artifact": resolved_data_path,
         }
     ],
-    "baseline_ready"        : os.path.exists(os.path.join(OUTPUTS_DIR, "baseline_metric.json")),
+    "baseline_ready": os.path.exists(os.path.join(OUTPUTS_DIR, "baseline_metric.json")),
     "primary_metric_schema_ready": all(
         k in primary_metric for k in ("metric_name", "value", "threshold", "passed")
     ),
-    "run_command"           : "uv run main.py",
+    "run_command": "uv run main.py",
     # FIX 3 — utcnow() deprecated in Python 3.12+
-    "generated_at"          : datetime.datetime.now(datetime.timezone.utc).isoformat(),
-    "data_mode_used"        : data_mode,
-    "data_source_path"      : resolved_data_path,
+    "generated_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+    "data_mode_used": data_mode,
+    "data_source_path": resolved_data_path,
     "source_access_proof": {
-        "expected_raw_path"   : DATA_PATH,
+        "expected_raw_path": DATA_PATH,
         "fallback_sample_path": FALLBACK_DATA_PATH,
-        "probe_script"        : "scripts/probe_data.py",
+        "probe_script": "scripts/probe_data.py",
         "source_reference_file": "data/raw_data_link.md",
         "external_sources": [
             "https://drive.google.com/drive/u/2/folders/1V1iKS0rcghr6K5paWJDK38X3K8lmDn5P",
@@ -274,18 +274,18 @@ manifest = {
         ],
     },
     "data_rows_after_filter": int(df.shape[0]),
-    "features_used"         : int(len(numeric_features)),
-    "test_set_size"         : int(len(X_test)),
+    "features_used": int(len(numeric_features)),
+    "test_set_size": int(len(X_test)),
     "outputs": {
-        "baseline_metric"    : "outputs/baseline_metric.json",
-        "primary_metric"     : "outputs/primary_metric.json",
+        "baseline_metric": "outputs/baseline_metric.json",
+        "primary_metric": "outputs/primary_metric.json",
         "scorecard_comparison": "outputs/scorecard_comparison.csv",
-        "milestone_manifest" : "outputs/milestone_manifest.json",
+        "milestone_manifest": "outputs/milestone_manifest.json",
     },
-    "baseline_roc_auc" : round(baseline_auc, 6),
-    "primary_roc_auc"  : round(primary_auc, 6),
-    "primary_passed"   : passed,
-    "gini_coefficient" : round(float(2 * primary_auc - 1), 6),
+    "baseline_roc_auc": round(baseline_auc, 6),
+    "primary_roc_auc": round(primary_auc, 6),
+    "primary_passed": passed,
+    "gini_coefficient": round(float(2 * primary_auc - 1), 6),
     "hypothesis_result": (
         f"{'SUPPORTED' if passed else 'NOT SUPPORTED'}: "
         f"LightGBM AUC = {primary_auc:.4f}, "
