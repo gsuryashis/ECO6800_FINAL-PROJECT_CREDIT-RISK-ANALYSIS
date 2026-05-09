@@ -4,3 +4,4 @@ scikit-learn
 lightgbm
 shap
 scipy
+curl -LsSf https://astral.sh/uv/install.sh | sh
