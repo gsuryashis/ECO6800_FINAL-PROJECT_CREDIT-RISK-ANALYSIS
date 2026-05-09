@@ -1,7 +1,17 @@
 {
-  "generated_at": "2026-05-09T06:16:03.438146Z",
+  "generated_at": "2026-05-09T06:16:41.609449Z",
   "data_mode_used": "fallback",
   "data_source_path": "data/fallback/lc_loan.csv",
+  "source_access_proof": {
+    "expected_raw_path": "data/raw/lc_loan.csv",
+    "fallback_sample_path": "data/fallback/lc_loan.csv",
+    "probe_script": "scripts/probe_data.py",
+    "source_reference_file": "data/raw_data_link.md",
+    "external_sources": [
+      "https://drive.google.com/drive/u/2/folders/1V1iKS0rcghr6K5paWJDK38X3K8lmDn5P",
+      "https://www.kaggle.com/datasets/husainsb/lendingclub-issued-loans"
+    ]
+  },
   "data_rows_after_filter": 1200,
   "features_used": 7,
   "test_set_size": 240,

@@ -1,0 +1,14 @@
+[project]
+name = "eco6800-credit-risk-analysis"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+  "lightgbm",
+  "matplotlib",
+  "numpy",
+  "pandas",
+  "scikit-learn",
+  "scipy",
+  "seaborn",
+  "shap",
+]
