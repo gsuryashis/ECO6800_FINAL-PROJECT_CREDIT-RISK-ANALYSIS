@@ -173,7 +173,7 @@ primary_metric = {
     "model": "LightGBM",
     "metric_name": "ROC-AUC",
     "value": round(float(primary_auc), 6),
-    "passed": bool(passed),
+    "passed": passed,
     "threshold": float(THRESHOLD),
     "lift_over_baseline": round(float(lift), 6),
     "lift_threshold": float(LIFT_THRESHOLD),
@@ -266,7 +266,7 @@ manifest = {
     },
     "baseline_roc_auc": round(float(baseline_auc), 6),
     "primary_roc_auc": round(float(primary_auc), 6),
-    "primary_passed": bool(passed),
+    "primary_passed": passed,
     "gini_coefficient": round(float(2 * primary_auc - 1), 6),
     "hypothesis_result": (
     f"{'SUPPORTED' if passed else 'NOT SUPPORTED'}: "
