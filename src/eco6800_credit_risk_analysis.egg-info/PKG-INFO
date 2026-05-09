@@ -1,0 +1,12 @@
+Metadata-Version: 2.4
+Name: eco6800-credit-risk-analysis
+Version: 0.1.0
+Requires-Python: >=3.10
+Requires-Dist: lightgbm==4.5.0
+Requires-Dist: matplotlib==3.9.2
+Requires-Dist: numpy==2.1.1
+Requires-Dist: pandas==2.2.3
+Requires-Dist: scikit-learn==1.5.2
+Requires-Dist: scipy==1.14.1
+Requires-Dist: seaborn==0.13.2
+Requires-Dist: shap==0.46.0
