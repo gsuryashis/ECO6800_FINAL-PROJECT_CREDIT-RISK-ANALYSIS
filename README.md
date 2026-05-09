@@ -4,6 +4,15 @@
 
 ### 1 — Data file behavior
 
+If you are on Windows and need to install `uv`, run:
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+$env:PATH += ";$env:USERPROFILE\.local\bin"
+```
+
+Then restart your terminal.
+
 `uv run main.py` and `uv run scripts/probe_data.py` now work on a clean clone using the committed fallback sample:
 
 ```
