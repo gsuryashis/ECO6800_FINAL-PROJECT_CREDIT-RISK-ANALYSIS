@@ -2,7 +2,7 @@
 
 ## Quick start
 
-### 1 — Data file behavior
+### 1 — Windows uv setup and data file behavior
 
 If you are on Windows and need to install `uv`, run:
 
@@ -11,7 +11,7 @@ powershell -ExecutionPolicy Bypass -c "irm https://astral.sh/uv/install.ps1 | ie
 $env:PATH += ";$env:USERPROFILE\.local\bin"
 ```
 
-The PATH line applies to the current session; then restart your terminal.
+Run these commands in PowerShell, then restart your terminal.
 
 `uv run main.py` and `uv run scripts/probe_data.py` now work on a clean clone using the committed fallback sample:
 
