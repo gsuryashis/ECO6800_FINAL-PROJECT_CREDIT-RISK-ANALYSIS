@@ -36,7 +36,7 @@
   "baseline_ready": true,
   "primary_metric_schema_ready": true,
   "run_command": "uv run main.py",
-  "generated_at": "2026-05-12T18:25:06.849853+00:00",
+  "generated_at": "2026-05-12T18:29:41.700334+00:00",
   "data_mode_used": "fallback",
   "data_source_path": "data/fallback/lc_loan.csv",
   "source_access_proof": {
@@ -59,6 +59,13 @@
     "baseline_metric": "outputs/baseline_metric.json",
     "primary_metric": "outputs/primary_metric.json",
     "scorecard_comparison": "outputs/scorecard_comparison.csv",
+    "shap_top_features": "outputs/tables/shap_top_features.csv",
+    "grade_default_rates": "outputs/tables/grade_default_rates.csv",
+    "iv_summary": "outputs/tables/iv_summary.csv",
+    "woe_bins": "outputs/tables/woe_bins.csv",
+    "auc_comparison_figure": "outputs/figures/auc_comparison.png",
+    "default_rate_by_grade_figure": "outputs/figures/default_rate_by_grade.png",
+    "shap_top_features_figure": "outputs/figures/shap_top_features.png",
     "milestone_manifest": "outputs/milestone_manifest.json"
   },
   "baseline_roc_auc": 0.755095,

@@ -69,8 +69,28 @@ uv run main.py
 | `outputs/primary_metric.json` | LightGBM ROC-AUC + pass/fail against 0.72 threshold, KS, Brier |
 | `outputs/milestone_manifest.json` | Run summary with Gini coefficient and links to all output files |
 | `outputs/scorecard_comparison.csv` | WoE scorecard point ranges vs. SHAP-based LightGBM feature importances |
+| `outputs/tables/iv_summary.csv` | Information Value (IV) totals by feature from WoE bins |
+| `outputs/tables/woe_bins.csv` | WoE bin table details (good/bad counts, WoE, IV) |
+| `outputs/tables/grade_default_rates.csv` | Default rates by grade (sample run) |
+| `outputs/tables/shap_top_features.csv` | Top SHAP features with mean |SHAP| importance |
+| `outputs/figures/auc_comparison.png` | Baseline vs LightGBM ROC-AUC bar chart with threshold |
+| `outputs/figures/default_rate_by_grade.png` | Default rate by grade (sample run) |
+| `outputs/figures/shap_top_features.png` | Top SHAP features (LightGBM) |
 
 Pre-computed versions of these files are committed to the repo and will be overwritten by a fresh run.
+
+## Final submission checklist (30-point rubric)
+
+| Item | Location |
+|---|---|
+| Approved charter | `CHARTER.md` |
+| Final report (Markdown) | `report.md` |
+| AI usage log | `AI_USAGE_LOG.md` |
+| Baseline metric JSON | `outputs/baseline_metric.json` |
+| Primary metric JSON | `outputs/primary_metric.json` |
+| Manifest with source/probe evidence | `outputs/milestone_manifest.json` |
+| Tables promised in charter | `outputs/tables/` (IV, WoE bins, scorecard, SHAP summary) |
+| Figures promised in charter | `outputs/figures/` (AUC, grade default rates, SHAP features) |
 
 ### Detailed pipeline (individual scripts)
 

@@ -9,13 +9,17 @@ Writes four files to outputs/:
   milestone_manifest.json
 """
 
+import datetime
 import json
 import os
+import pickle
 import warnings
-import datetime
 
 import numpy as np
 import pandas as pd
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score, brier_score_loss
 from sklearn.model_selection import train_test_split
@@ -48,7 +52,12 @@ def to_python_types(obj):
 DATA_PATH          = os.path.join("data", "raw", "lc_loan.csv")
 FALLBACK_DATA_PATH = os.path.join("data", "fallback", "lc_loan.csv")
 OUTPUTS_DIR        = "outputs"
+FIGURES_DIR        = os.path.join(OUTPUTS_DIR, "figures")
+TABLES_DIR         = os.path.join(OUTPUTS_DIR, "tables")
+ARTIFACTS_DIR      = os.path.join(OUTPUTS_DIR, "artifacts")
 os.makedirs(OUTPUTS_DIR, exist_ok=True)
+os.makedirs(FIGURES_DIR, exist_ok=True)
+os.makedirs(TABLES_DIR, exist_ok=True)
 
 # ── success criteria ──
 THRESHOLD      = 0.72
@@ -241,7 +250,88 @@ comparison.to_csv(os.path.join(OUTPUTS_DIR, "scorecard_comparison.csv"), index=F
 print(f"  ✅ Saved scorecard_comparison.csv  ({len(comparison)} features)")
 
 # ---------------------------------------------------------------------------
-# 7. Milestone manifest
+# 7. Evidence tables & figures
+# ---------------------------------------------------------------------------
+print("\nWriting evidence tables & figures …")
+
+top_shap = comparison.head(10).copy()
+top_shap.to_csv(os.path.join(TABLES_DIR, "shap_top_features.csv"), index=False)
+
+plt.figure(figsize=(10, 6))
+plt.barh(top_shap["Feature"][::-1], top_shap["SHAP_Importance"][::-1], color="#4C72B0")
+plt.xlabel("Mean |SHAP| Importance")
+plt.title("Top SHAP Features (LightGBM)")
+plt.tight_layout()
+plt.savefig(os.path.join(FIGURES_DIR, "shap_top_features.png"), dpi=150, bbox_inches="tight")
+plt.close()
+
+auc_df = pd.DataFrame(
+    {
+        "Model": ["Baseline LR", "LightGBM"],
+        "ROC_AUC": [baseline_auc, primary_auc],
+    }
+)
+plt.figure(figsize=(6, 4))
+plt.bar(auc_df["Model"], auc_df["ROC_AUC"], color=["#7F7F7F", "#2CA02C"])
+plt.axhline(THRESHOLD, color="red", linestyle="--", linewidth=1, label=f"Threshold {THRESHOLD}")
+plt.ylim(0.0, 1.0)
+plt.ylabel("ROC-AUC")
+plt.title("Baseline vs Primary Model ROC-AUC")
+plt.legend()
+plt.tight_layout()
+plt.savefig(os.path.join(FIGURES_DIR, "auc_comparison.png"), dpi=150, bbox_inches="tight")
+plt.close()
+
+if "grade" in df.columns:
+    grade_rates = (
+        df.groupby("grade")["defaultstatus"]
+        .agg(total_loans="count", defaults="sum", default_rate="mean")
+        .reset_index()
+        .sort_values("default_rate", ascending=False)
+    )
+    grade_rates.to_csv(os.path.join(TABLES_DIR, "grade_default_rates.csv"), index=False)
+
+    plt.figure(figsize=(8, 5))
+    plt.bar(grade_rates["grade"], grade_rates["default_rate"], color="#E24A33")
+    plt.xlabel("Grade")
+    plt.ylabel("Default Rate")
+    plt.title("Default Rate by Grade (Sample Run)")
+    plt.tight_layout()
+    plt.savefig(os.path.join(FIGURES_DIR, "default_rate_by_grade.png"), dpi=150, bbox_inches="tight")
+    plt.close()
+
+woe_tables_path = os.path.join(ARTIFACTS_DIR, "woe_tables.pkl")
+if os.path.exists(woe_tables_path):
+    with open(woe_tables_path, "rb") as f:
+        woe_tables = pickle.load(f)
+
+    woe_rows = []
+    iv_rows = []
+    for feature, table in woe_tables.items():
+        table_reset = table.reset_index()
+        index_name = table.index.name or table_reset.columns[0]
+        table_reset = table_reset.rename(columns={index_name: "bin"})
+        rename_map = {
+            0: "good_count",
+            1: "bad_count",
+            "WoE": "woe",
+            "IV": "iv",
+            "good_rate": "good_rate",
+            "bad_rate": "bad_rate",
+        }
+        table_reset = table_reset.rename(columns={k: v for k, v in rename_map.items() if k in table_reset.columns})
+        table_reset.insert(0, "feature", feature)
+        woe_rows.append(table_reset)
+        iv_rows.append({"feature": feature, "iv": float(table["IV"].sum())})
+
+    woe_df = pd.concat(woe_rows, ignore_index=True)
+    woe_df.to_csv(os.path.join(TABLES_DIR, "woe_bins.csv"), index=False)
+
+    iv_df = pd.DataFrame(iv_rows).sort_values("iv", ascending=False)
+    iv_df.to_csv(os.path.join(TABLES_DIR, "iv_summary.csv"), index=False)
+
+# ---------------------------------------------------------------------------
+# 8. Milestone manifest
 # ---------------------------------------------------------------------------
 print("\nWriting milestone manifest …")
 
@@ -309,6 +399,13 @@ manifest = {
         "baseline_metric": "outputs/baseline_metric.json",
         "primary_metric": "outputs/primary_metric.json",
         "scorecard_comparison": "outputs/scorecard_comparison.csv",
+        "shap_top_features": "outputs/tables/shap_top_features.csv",
+        "grade_default_rates": "outputs/tables/grade_default_rates.csv",
+        "iv_summary": "outputs/tables/iv_summary.csv",
+        "woe_bins": "outputs/tables/woe_bins.csv",
+        "auc_comparison_figure": "outputs/figures/auc_comparison.png",
+        "default_rate_by_grade_figure": "outputs/figures/default_rate_by_grade.png",
+        "shap_top_features_figure": "outputs/figures/shap_top_features.png",
         "milestone_manifest": "outputs/milestone_manifest.json",
     },
     "baseline_roc_auc": round(baseline_auc, 6),
