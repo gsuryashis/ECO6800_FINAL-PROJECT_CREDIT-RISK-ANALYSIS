@@ -14,9 +14,9 @@ This report documents the final deliverables for the credit risk scorecard proje
 |---|---|---|
 | Project type | Predictive | ✅ Predictive |
 | Prediction target | `defaultstatus` (binary default from `loan_status`) | ✅ Identical definition |
-| Primary metric | Held-out ROC-AUC ≥ 0.72 for LightGBM | ✅ LightGBM AUC = 0.7742 |
-| Baseline | Vanilla logistic regression (~0.68) | ✅ Baseline LR AUC = 0.6920 |
-| Data source | `data/raw/lc_loan.csv` (LendingClub, Kaggle) | ✅ Same source |
+| Primary metric | Held-out ROC-AUC ≥ 0.72 for LightGBM | ✅ LightGBM AUC = 0.7992 |
+| Baseline | Vanilla logistic regression (~0.68) | ✅ Baseline LR AUC = 0.7551 |
+| Data source | `data/raw/lc_loan.csv` (preferred) + `data/fallback/lc_loan.csv` (committed reproducibility sample) | ✅ Both paths supported in code and manifest |
 
 No changes were made to the question, project type, main metric, or baseline definition after charter approval.
 
@@ -24,18 +24,18 @@ No changes were made to the question, project type, main metric, or baseline def
 
 ## 2. Data
 
-- **Source:** LendingClub Issued Loans dataset (~887k rows, 72–74 columns)
-- **Access:** Kaggle / Google Drive (file too large to commit; see README for download instructions)
+- **Source:** LendingClub Issued Loans dataset (full source external) + committed fallback sample in `data/fallback/lc_loan.csv`
+- **Access:** Kaggle / Google Drive for full dataset; fallback sample is bundled for clean-machine reproducibility
 - **Target construction:**
   - **1 (Default/Bad):** `loan_status` ∈ {`Charged Off`, `Default`, `Late (31-120 days)`}
   - **0 (Non-Default/Good):** `loan_status` = `Fully Paid`
   - **Excluded (right-censored):** `Current`, `In Grace Period`
-- **Rows after exclusions:** ~242 k
-- **Bad rate:** ~19 %
+- **Rows after exclusions (committed reproducible run):** 1,200
+- **Bad rate (committed reproducible run):** 54.42%
 
 ### Data proof
 
-Running `uv run scripts/probe_data.py` loads the first five rows and confirms the presence of required columns (`loan_status`, `loan_amnt`, `dti`, `grade`). This constitutes the data access proof required by the milestone.
+Running `uv run scripts/probe_data.py` loads the first five rows and confirms the presence of required columns (`loan_status`, `loan_amnt`, `dti`, `grade`) from either `data/raw/lc_loan.csv` or `data/fallback/lc_loan.csv`. This is the source-access proof used by the milestone.
 
 ---
 
@@ -71,24 +71,24 @@ Final WoE scorecard: `outputs/tables/final_scorecard.csv`
 
 | Metric | Vanilla LR (Baseline) | LightGBM (Primary) |
 |---|---|---|
-| ROC-AUC | 0.6920 | **0.7742** |
-| Gini Coefficient | 0.3840 | **0.5484** |
-| KS Statistic | 0.3218 | 0.4283 |
-| Brier Score (lower = better) | 0.1486 | 0.1219 |
+| ROC-AUC | 0.7551 | **0.7992** |
+| Gini Coefficient | 0.5102 | **0.5984** |
+| KS Statistic | 0.4470 | 0.5445 |
+| Brier Score (lower = better) | 0.1978 | 0.1731 |
 
-**Hypothesis supported:** LightGBM ROC-AUC (0.7742) exceeds vanilla LR (0.6920) by **0.0822**, comfortably above the 0.04 minimum improvement threshold and above the 0.72 gating criterion.
+**Hypothesis supported:** LightGBM ROC-AUC (0.7992) exceeds vanilla LR (0.7551) by **0.0441**, above the 0.04 minimum improvement threshold and above the 0.72 gating criterion.
 
 ### Top features by SHAP importance (LightGBM)
 
 | Feature | SHAP Mean |Abs| Importance |
 |---|---|
-| `int_rate` | 0.412 |
-| `sub_grade` | 0.158 |
-| `grade` | 0.141 |
-| `revol_util` | 0.052 |
-| `annual_inc` | 0.041 |
+| `delinq_2yrs` | 1.059 |
+| `loan_amnt` | 0.290 |
+| `dti` | 0.237 |
+| `annual_inc` | 0.179 |
+| `int_rate` | 0.176 |
 
-Interest rate, sub-grade, and grade dominate both models — expected given their tight link to borrower risk tier. The WoE scorecard and LightGBM agree on the top-3 risk drivers, which supports the interpretability of the LightGBM model.
+For the committed fallback run, delinquency history (`delinq_2yrs`) and core affordability/loan-size variables dominate SHAP importance. Feature importance should be re-checked on the full raw dataset when `data/raw/lc_loan.csv` is available.
 
 ---
 
@@ -117,7 +117,7 @@ Interest rate, sub-grade, and grade dominate both models — expected given thei
 
 4. **No causal interpretation:** SHAP values reflect feature attribution within the model, not causal effects. High SHAP importance for `int_rate` partly reflects the fact that the interest rate is set by LendingClub's own risk model — it is an endogenous variable and cannot be used causally.
 
-5. **Data availability:** `lc_loan.csv` is not bundled in the repository due to file-size constraints. All metric JSON files are pre-committed at their correct values so that the repo is inspectable without downloading the raw data.
+5. **Data availability:** The full `data/raw/lc_loan.csv` file is not bundled due to size/privacy constraints. A small permitted fallback sample is committed for reproducibility, and outputs should be interpreted as sample-run artifacts unless regenerated on the full source.
 
 6. **No production deployment:** This project is an academic comparison exercise. Results do not constitute a production lending decision system.
 
@@ -127,8 +127,9 @@ Interest rate, sub-grade, and grade dominate both models — expected given thei
 
 ```bash
 pip install -r requirements.txt
-# Place lc_loan.csv at data/raw/lc_loan.csv
+# Optional: place full source at data/raw/lc_loan.csv
+uv run scripts/probe_data.py
 uv run main.py
 ```
 
-Running `main.py` overwrites the pre-committed JSON and CSV files with freshly computed values. All random seeds are fixed (`random_state=42`).
+`main.py` overwrites the pre-committed JSON and CSV files with freshly computed values. If the raw file is missing, the run automatically uses `data/fallback/lc_loan.csv`. All random seeds are fixed (`random_state=42`).

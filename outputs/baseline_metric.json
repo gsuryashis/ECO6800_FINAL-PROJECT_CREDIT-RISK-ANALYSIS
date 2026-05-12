@@ -1,5 +1,5 @@
 {
-  "model": "Vanilla Logistic Regression",
+  "model": "Logistic Regression",
   "metric_name": "ROC-AUC",
   "value": 0.755095,
   "KS": 0.44695,

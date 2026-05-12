@@ -2,21 +2,50 @@
   "charter_locked": true,
   "sources": [
     {
-      "name": "LendingClub Issued Loans",
-      "status": "fallback",
-      "probe_artifact": "data/fallback/lc_loan.csv"
+      "name": "LendingClub Issued Loans (Kaggle)",
+      "kind": "external",
+      "url": "https://www.kaggle.com/datasets/husainsb/lendingclub-issued-loans",
+      "reference_file": "data/raw_data_link.md"
+    },
+    {
+      "name": "LendingClub mirror (Google Drive)",
+      "kind": "external",
+      "url": "https://drive.google.com/drive/u/2/folders/1V1iKS0rcghr6K5paWJDK38X3K8lmDn5P",
+      "reference_file": "data/raw_data_link.md"
+    },
+    {
+      "name": "Raw source file (preferred)",
+      "kind": "local",
+      "path": "data/raw/lc_loan.csv",
+      "present": false
+    },
+    {
+      "name": "Fallback sample file (committed)",
+      "kind": "local",
+      "path": "data/fallback/lc_loan.csv",
+      "present": true,
+      "used_for_run": true
+    },
+    {
+      "name": "Data probe script",
+      "kind": "verification",
+      "path": "scripts/probe_data.py",
+      "run_command": "uv run scripts/probe_data.py"
     }
   ],
   "baseline_ready": true,
   "primary_metric_schema_ready": true,
   "run_command": "uv run main.py",
-  "generated_at": "2026-05-09T06:17:44.174496Z",
+  "generated_at": "2026-05-12T13:03:11.977398+00:00",
   "data_mode_used": "fallback",
   "data_source_path": "data/fallback/lc_loan.csv",
   "source_access_proof": {
+    "selected_source": "data/fallback/lc_loan.csv",
+    "selected_source_mode": "fallback",
     "expected_raw_path": "data/raw/lc_loan.csv",
     "fallback_sample_path": "data/fallback/lc_loan.csv",
     "probe_script": "scripts/probe_data.py",
+    "probe_command": "uv run scripts/probe_data.py",
     "source_reference_file": "data/raw_data_link.md",
     "external_sources": [
       "https://drive.google.com/drive/u/2/folders/1V1iKS0rcghr6K5paWJDK38X3K8lmDn5P",
@@ -29,8 +58,8 @@
   "outputs": {
     "baseline_metric": "outputs/baseline_metric.json",
     "primary_metric": "outputs/primary_metric.json",
-    "milestone_manifest": "outputs/milestone_manifest.json",
-    "scorecard_comparison": "outputs/scorecard_comparison.csv"
+    "scorecard_comparison": "outputs/scorecard_comparison.csv",
+    "milestone_manifest": "outputs/milestone_manifest.json"
   },
   "baseline_roc_auc": 0.755095,
   "primary_roc_auc": 0.799216,
