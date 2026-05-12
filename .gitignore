@@ -6,6 +6,7 @@ data/raw/
 
 # Allow output deliverable CSVs
 !outputs/tables/*.csv
+!outputs/scorecard_comparison.csv
 
 # Python cache
 __pycache__/
