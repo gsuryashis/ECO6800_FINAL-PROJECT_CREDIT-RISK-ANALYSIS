@@ -90,6 +90,28 @@ Final WoE scorecard: `outputs/tables/final_scorecard.csv`
 
 For the committed fallback run, delinquency history (`delinq_2yrs`) and core affordability/loan-size variables dominate SHAP importance. Feature importance should be re-checked on the full raw dataset when `data/raw/lc_loan.csv` is available.
 
+### Economics interpretation and decision impact
+
+The primary model clears the charter threshold (ROC-AUC ≥ 0.72) and beats the baseline by **0.0441**. In underwriting terms, this means the LightGBM model ranks higher-risk applicants above lower-risk ones more reliably than a vanilla logistic regression. For a Chief Risk Officer, that implies **fewer defaults at a fixed approval rate**, or **more approvals at a fixed default rate**, without changing the underwriting policy objective. Figure `outputs/figures/auc_comparison.png` shows the improvement relative to the threshold.
+
+The effect size is modest but policy-relevant: a +0.044 AUC lift is typically considered a meaningful discrimination gain for retail credit underwriting, especially when the baseline is already in the mid‑0.70s. This is consistent with the charter’s hypothesis that a modern, interpretable boosting model can outperform a legacy scorecard while remaining auditable via SHAP summaries.
+
+### Evidence map (claims → files)
+
+| Claim | Evidence |
+|---|---|
+| LightGBM meets ROC-AUC ≥ 0.72 and exceeds the baseline by ≥ 0.04 | `outputs/primary_metric.json`, `outputs/baseline_metric.json`, `outputs/figures/auc_comparison.png` |
+| Key predictive drivers are delinquency history and affordability metrics | `outputs/scorecard_comparison.csv`, `outputs/tables/shap_top_features.csv`, `outputs/figures/shap_top_features.png` |
+| Risk varies systematically by grade (descriptive) | `outputs/tables/grade_default_rates.csv`, `outputs/figures/default_rate_by_grade.png` |
+| WoE/IV variable selection evidence exists for the scorecard pipeline | `outputs/tables/iv_summary.csv`, `outputs/tables/woe_bins.csv` |
+| Scorecard points vs SHAP importance are comparable | `outputs/scorecard_comparison.csv`, `outputs/tables/final_scorecard.csv` |
+
+### Descriptive vs predictive vs causal claims
+
+- **Descriptive:** Grade default rates (`outputs/tables/grade_default_rates.csv`) describe sample patterns only.
+- **Predictive:** ROC-AUC results and SHAP importance are predictive performance and model attribution claims.
+- **Causal:** **No causal claims are made.** Interest rate and grade are endogenous to lender policy and should not be interpreted as causal drivers of default.
+
 ---
 
 ## 5. Output Files
@@ -100,8 +122,12 @@ For the committed fallback run, delinquency history (`delinq_2yrs`) and core aff
 | `outputs/primary_metric.json` | LightGBM ROC-AUC, pass/fail, KS, Brier |
 | `outputs/milestone_manifest.json` | Run summary with Gini and all file paths |
 | `outputs/scorecard_comparison.csv` | Per-feature WoE point ranges vs. SHAP importances |
+| `outputs/tables/shap_top_features.csv` | Top SHAP features (mean |SHAP| importance) |
+| `outputs/tables/grade_default_rates.csv` | Default rates by grade (sample run) |
+| `outputs/tables/iv_summary.csv` | Information Value (IV) totals by feature |
+| `outputs/tables/woe_bins.csv` | WoE bin-level evidence for scorecard variables |
 | `outputs/tables/final_scorecard.csv` | Full WoE point-based scorecard (Feature, Category, Points) |
-| `outputs/figures/` | EDA and model diagnostic plots |
+| `outputs/figures/` | AUC comparison, grade default rates, SHAP feature chart |
 | `outputs/artifacts/scorecard_artifacts.pkl` | Saved WoE-LR model + column list |
 | `outputs/artifacts/woe_tables.pkl` | WoE bin tables for all selected features |
 
@@ -119,11 +145,22 @@ For the committed fallback run, delinquency history (`delinq_2yrs`) and core aff
 
 5. **Data availability:** The full `data/raw/lc_loan.csv` file is not bundled due to size/privacy constraints. A small permitted fallback sample is committed for reproducibility, and outputs should be interpreted as sample-run artifacts unless regenerated on the full source.
 
-6. **No production deployment:** This project is an academic comparison exercise. Results do not constitute a production lending decision system.
+6. **WoE artifacts are precomputed:** `outputs/tables/iv_summary.csv` and `outputs/tables/woe_bins.csv` are exported from the committed WoE artifacts; they should be refreshed when the full raw dataset is available.
+
+7. **No production deployment:** This project is an academic comparison exercise. Results do not constitute a production lending decision system.
 
 ---
 
-## 7. Reproducibility
+## 7. What additional evidence would change our mind
+
+1. **Full-data replication:** If the full `data/raw/lc_loan.csv` run reduced the AUC lift below 0.04, the hypothesis would be rejected.
+2. **Out-of-time validation:** A holdout from later vintages showing deterioration in LightGBM performance relative to LR would weaken the case for replacement.
+3. **Stability across segments:** Evidence that lift only exists in narrow borrower segments would argue against broad deployment.
+4. **Fairness diagnostics:** If subgroup performance (e.g., by grade or income bands) shows unacceptable disparities, the model would require redesign.
+
+---
+
+## 8. Reproducibility
 
 ```bash
 pip install -r requirements.txt
