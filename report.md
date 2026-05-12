@@ -1,4 +1,4 @@
-# Project Report — ECO 6800 Credit Risk Analysis
+# Project Report — ECO 6810 Credit Risk Analysis
 
 **Team:** Suryashis, Vignesh, Vishvas  
 **Date:** 2026-05-05  
