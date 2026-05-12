@@ -62,8 +62,9 @@ This constitutes a minimum improvement of **0.04 ROC-AUC points** over baseline,
 
 - **Original Source:** Kaggle — [LendingClub Issued Loans Dataset](https://www.kaggle.com/datasets/husainsb/lendingclub-issued-loans?resource=download)
 - **Mirrored to:** Shared Google Drive — [Drive Link](https://drive.google.com/drive/u/2/folders/1V1iKS0rcghr6K5paWJDK38X3K8lmDn5P)
-- **Local probe path:** `data/raw/lc_loan.csv`
-- **Clean-machine access:** A Kaggle account or Google Drive access is required. The file is not bundled in the repo. Team members must manually download and place it at `data/raw/lc_loan.csv` before running.
+- **Preferred local source path:** `data/raw/lc_loan.csv`
+- **Committed fallback sample path:** `data/fallback/lc_loan.csv` (small synthetic sample for reproducibility only)
+- **Clean-machine access:** The full raw file is not bundled in the repo. Users can either (a) place the full source at `data/raw/lc_loan.csv` for full-scale analysis, or (b) run with the committed fallback sample for reproducible dry runs.
 - **Data probe script:** `scripts/probe_data.py` — run via `uv run scripts/probe_data.py`
 
 ```python
@@ -72,16 +73,23 @@ import pandas as pd
 import os
 
 DATA_PATH = os.path.join("data", "raw", "lc_loan.csv")
+FALLBACK_DATA_PATH = os.path.join("data", "fallback", "lc_loan.csv")
+
+def resolve_data_path():
+    if os.path.exists(DATA_PATH):
+        return DATA_PATH
+    if os.path.exists(FALLBACK_DATA_PATH):
+        return FALLBACK_DATA_PATH
+    raise FileNotFoundError(f"❌ Data missing. Expected either {DATA_PATH} or {FALLBACK_DATA_PATH}")
 
 def probe_data():
-    if not os.path.exists(DATA_PATH):
-        raise FileNotFoundError(f"❌ Data missing. Place CSV at: {DATA_PATH}")
-    df = pd.read_csv(DATA_PATH, nrows=5)
+    data_path = resolve_data_path()
+    df = pd.read_csv(data_path, nrows=5)
     required_cols = ["loan_status", "loan_amnt", "dti", "grade"]
     missing = [c for c in required_cols if c not in df.columns]
     if missing:
         raise ValueError(f"❌ Missing expected columns: {missing}")
-    print(f"✅ Data loaded. Columns present: {df[required_cols].columns.tolist()}")
+    print(f"✅ Data loaded from {data_path}. Columns present: {df[required_cols].columns.tolist()}")
     return True
 
 if __name__ == "__main__":

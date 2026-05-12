@@ -249,10 +249,36 @@ manifest = {
     "charter_locked": True,
     "sources": [
         {
-            "name": "LendingClub Issued Loans",
-            "status": data_mode,
-            "probe_artifact": resolved_data_path,
-        }
+            "name": "LendingClub Issued Loans (Kaggle)",
+            "kind": "external",
+            "url": "https://www.kaggle.com/datasets/husainsb/lendingclub-issued-loans",
+            "reference_file": "data/raw_data_link.md",
+        },
+        {
+            "name": "LendingClub mirror (Google Drive)",
+            "kind": "external",
+            "url": "https://drive.google.com/drive/u/2/folders/1V1iKS0rcghr6K5paWJDK38X3K8lmDn5P",
+            "reference_file": "data/raw_data_link.md",
+        },
+        {
+            "name": "Raw source file (preferred)",
+            "kind": "local",
+            "path": DATA_PATH,
+            "present": os.path.exists(DATA_PATH),
+        },
+        {
+            "name": "Fallback sample file (committed)",
+            "kind": "local",
+            "path": FALLBACK_DATA_PATH,
+            "present": os.path.exists(FALLBACK_DATA_PATH),
+            "used_for_run": data_mode == "fallback",
+        },
+        {
+            "name": "Data probe script",
+            "kind": "verification",
+            "path": "scripts/probe_data.py",
+            "run_command": "uv run scripts/probe_data.py",
+        },
     ],
     "baseline_ready": os.path.exists(os.path.join(OUTPUTS_DIR, "baseline_metric.json")),
     "primary_metric_schema_ready": all(
@@ -264,9 +290,12 @@ manifest = {
     "data_mode_used": data_mode,
     "data_source_path": resolved_data_path,
     "source_access_proof": {
+        "selected_source": resolved_data_path,
+        "selected_source_mode": data_mode,
         "expected_raw_path": DATA_PATH,
         "fallback_sample_path": FALLBACK_DATA_PATH,
         "probe_script": "scripts/probe_data.py",
+        "probe_command": "uv run scripts/probe_data.py",
         "source_reference_file": "data/raw_data_link.md",
         "external_sources": [
             "https://drive.google.com/drive/u/2/folders/1V1iKS0rcghr6K5paWJDK38X3K8lmDn5P",
