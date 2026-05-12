@@ -63,7 +63,7 @@ This constitutes a minimum improvement of **0.04 ROC-AUC points** over baseline,
 - **Original Source:** Kaggle — [LendingClub Issued Loans Dataset](https://www.kaggle.com/datasets/husainsb/lendingclub-issued-loans?resource=download)
 - **Mirrored to:** Shared Google Drive — [Drive Link](https://drive.google.com/drive/u/2/folders/1V1iKS0rcghr6K5paWJDK38X3K8lmDn5P)
 - **Preferred local source path:** `data/raw/lc_loan.csv`
-- **Committed fallback sample path:** `data/fallback/lc_loan.csv` (small synthetic sample for reproducibility only)
+- **Committed fallback sample path:** `data/fallback/lc_loan.csv` (small permitted fallback sample dataset for reproducibility only)
 - **Clean-machine access:** The full raw file is not bundled in the repo. Users can either (a) place the full source at `data/raw/lc_loan.csv` for full-scale analysis, or (b) run with the committed fallback sample for reproducible dry runs.
 - **Data probe script:** `scripts/probe_data.py` — run via `uv run scripts/probe_data.py`
 

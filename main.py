@@ -1,5 +1,5 @@
 """
-main.py — ECO 6800 Credit Risk Analysis Pipeline
+main.py — ECO 6810 Credit Risk Analysis Pipeline
 Run: python main.py
 
 Writes four files to outputs/:

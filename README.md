@@ -19,7 +19,7 @@ After running these commands, restart your terminal (the PATH line is session-lo
 data/fallback/lc_loan.csv
 ```
 
-> Note: `data/fallback/lc_loan.csv` is a small synthetic sample dataset included only for reproducibility/testing on clean machines. It is not the full LendingClub source dataset used for final project analysis.
+> Note: `data/fallback/lc_loan.csv` is a small permitted fallback sample dataset included only for reproducibility/testing on clean machines. It is not the full LendingClub source dataset used for final project analysis.
 
 To run with the full LendingClub dataset instead, download `lc_loan.csv` from one of the sources below and put it at exactly this path inside the repo:
 
@@ -231,11 +231,11 @@ The proposed design also provides a strong applied example of how data preproces
 
 | Metric | Vanilla LR Baseline | LightGBM (Primary) |
 |---|---|---|
-| ROC-AUC | 0.6920 | **0.7742** |
-| Gini Coefficient | 0.3840 | **0.5484** |
-| KS Statistic | 0.3218 | 0.4283 |
-| Brier Score | 0.1486 | 0.1219 |
+| ROC-AUC | 0.7551 | **0.7992** |
+| Gini Coefficient | 0.5102 | **0.5984** |
+| KS Statistic | 0.4469 | 0.5445 |
+| Brier Score | 0.1978 | 0.1731 |
 
-- **Hypothesis supported:** LightGBM AUC (0.7742) exceeds vanilla LR AUC (0.6920) by 0.0822, well above the 0.04 threshold.
+- **Hypothesis supported:** LightGBM AUC (0.7992) exceeds vanilla LR AUC (0.7551) by 0.0441, above the 0.04 threshold.
 - Final WoE scorecard available in `outputs/tables/final_scorecard.csv`
 - Model comparison available in `outputs/scorecard_comparison.csv`
